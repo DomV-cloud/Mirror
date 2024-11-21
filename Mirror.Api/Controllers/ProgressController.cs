@@ -4,7 +4,6 @@ using Mirror.Api.Filters;
 using Mirror.Application.Services.Repository.Progresses;
 using Mirror.Contracts.Progress;
 using Mirror.Domain.Entities;
-using Mirror.Infrastructure.Services.Repository.Progress;
 
 namespace Mirror.Api.Controllers
 {
@@ -29,21 +28,29 @@ namespace Mirror.Api.Controllers
         }
 
         [HttpGet("all", Name = "all")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ProgressDTO>))]
         public async Task<IActionResult> GetAll()
         {
-            try
-            {
-                var progress = await _progressRepository.GetProgressesAsync();
+            var progress = await _progressRepository.GetProgressesAsync();
 
-                var response = _mapper.Map<List<ProgressDTO>>(progress);
+            var response = _mapper.Map<List<ProgressDTO>>(progress);
 
-                return Ok(response);
-            }
-            catch (Exception ex)
+            return Ok(response);
+        }
+
+        [HttpPost("create-progress", Name = "create-progress")]
+        public async Task<IActionResult> CreateProgress([FromBody] CreateProgressDTO progress)
+        {
+            if (progress is null)
             {
-                _logger.LogError(ex.Message);
-                throw;
+                return BadRequest();
             }
+
+            var mappedProgress = _mapper.Map<Mirror.Domain.Entities.Progress>(progress);
+
+            var response = await _progressRepository.CreateProgress(mappedProgress);
+
+            return Ok(response);
         }
     }
 }

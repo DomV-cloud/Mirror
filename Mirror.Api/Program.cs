@@ -1,18 +1,14 @@
-using Mirror.Infrastructure.DependencyInjection;
-using Mirror.Application.DependencyInjection;
-using Mirror.Application.DatabaseContext;
-using Microsoft.EntityFrameworkCore;
-using Mirror.Api.Middleware;
-using Mirror.Api.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using AutoMapper;
-using Mirror.Contracts.Progress;
-using Mirror.Domain.Entities;
+using Microsoft.OpenApi.Models;
+using Mirror.Api.Filters;
+using Mirror.Api.Middleware;
+using Mirror.Application.DatabaseContext;
+using Mirror.Application.DependencyInjection;
+using Mirror.Infrastructure.DependencyInjection;
 using Mirror.Infrastructure.Mapper.Progress;
-using Mirror.Contracts.ProgressValue;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -27,6 +23,18 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services
         .AddApplication()
         .AddInfrastructure(builder.Configuration);
+
+    builder.Services.AddCors(options =>
+    {
+        options.AddDefaultPolicy(
+            builder =>
+            {
+                builder.AllowAnyOrigin()
+                    .SetIsOriginAllowedToAllowWildcardSubdomains()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+    });
 
     builder.Services.AddDbContext<MirrorContext>(options =>
                options.UseSqlServer(builder.Configuration.GetConnectionString("sqlConnection")));
@@ -91,5 +99,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
+
+app.UseCors();
 
 app.Run();

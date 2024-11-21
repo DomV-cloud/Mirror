@@ -29,14 +29,14 @@ namespace Mirror.Application.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasAnnotation("Relational:JsonPropertyName", "id");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2")
-                        .HasAnnotation("Relational:JsonPropertyName", "date");
-
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasAnnotation("Relational:JsonPropertyName", "description");
+
+                    b.Property<string>("ProgressName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasAnnotation("Relational:JsonPropertyName", "progressName");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -53,15 +53,15 @@ namespace Mirror.Application.Migrations
                         new
                         {
                             Id = new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e"),
-                            Date = new DateTime(2024, 10, 26, 19, 27, 7, 801, DateTimeKind.Local).AddTicks(4341),
-                            Description = "Initial progress entry for John",
+                            Description = "Cutting body fat",
+                            ProgressName = "Weight",
                             UserId = new Guid("36165a94-1a9c-43dd-bf13-97a4e61e8b89")
                         },
                         new
                         {
                             Id = new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"),
-                            Date = new DateTime(2024, 10, 26, 19, 27, 7, 801, DateTimeKind.Local).AddTicks(4481),
-                            Description = "Initial progress entry for Jane",
+                            Description = "Training to Marathon",
+                            ProgressName = "Time",
                             UserId = new Guid("6d3080d4-5dbf-4549-8ac1-77713785de2a")
                         });
                 });
@@ -74,12 +74,25 @@ namespace Mirror.Application.Migrations
                         .HasAnnotation("Relational:JsonPropertyName", "id");
 
                     b.Property<string>("ProgressColumnHead")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "column-head");
+                        .HasAnnotation("Relational:JsonPropertyName", "progressColumnHead");
 
                     b.Property<string>("ProgressColumnValue")
                         .HasColumnType("nvarchar(max)")
                         .HasAnnotation("Relational:JsonPropertyName", "column-value");
+
+                    b.Property<int>("ProgressDate_Day")
+                        .HasColumnType("int")
+                        .HasAnnotation("Relational:JsonPropertyName", "day");
+
+                    b.Property<int>("ProgressDate_Month")
+                        .HasColumnType("int")
+                        .HasAnnotation("Relational:JsonPropertyName", "month");
+
+                    b.Property<int>("ProgressDate_Year")
+                        .HasColumnType("int")
+                        .HasAnnotation("Relational:JsonPropertyName", "year");
 
                     b.Property<Guid>("ProgressId")
                         .HasColumnType("uniqueidentifier");
@@ -90,19 +103,77 @@ namespace Mirror.Application.Migrations
 
                     b.ToTable("ProgressValues");
 
+                    b.HasAnnotation("Relational:JsonPropertyName", "progressValues");
+
                     b.HasData(
                         new
                         {
-                            Id = new Guid("e25bcc09-5585-4abf-bcce-da53394a85ba"),
+                            Id = new Guid("35cb12b5-9441-4c0f-8360-5b9d6082cda3"),
                             ProgressColumnHead = "Weight",
-                            ProgressColumnValue = "70",
+                            ProgressColumnValue = "71",
+                            ProgressDate_Day = 6,
+                            ProgressDate_Month = 8,
+                            ProgressDate_Year = 2024,
                             ProgressId = new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e")
                         },
                         new
                         {
-                            Id = new Guid("fe22bbf4-2920-4fc1-8e10-a5ad682e6281"),
-                            ProgressColumnHead = "BMI",
-                            ProgressColumnValue = "22",
+                            Id = new Guid("c38f98c3-682d-49d0-8b20-d7b40e015a74"),
+                            ProgressColumnHead = "Weight",
+                            ProgressColumnValue = "72",
+                            ProgressDate_Day = 10,
+                            ProgressDate_Month = 8,
+                            ProgressDate_Year = 2024,
+                            ProgressId = new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e")
+                        },
+                        new
+                        {
+                            Id = new Guid("593b9f57-c5bc-4b92-b444-9ea14301b60c"),
+                            ProgressColumnHead = "Weight",
+                            ProgressColumnValue = "73",
+                            ProgressDate_Day = 12,
+                            ProgressDate_Month = 8,
+                            ProgressDate_Year = 2024,
+                            ProgressId = new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e")
+                        },
+                        new
+                        {
+                            Id = new Guid("aedc3655-901c-4689-9d9a-a3c0387e329b"),
+                            ProgressColumnHead = "Time",
+                            ProgressColumnValue = "25:17",
+                            ProgressDate_Day = 5,
+                            ProgressDate_Month = 1,
+                            ProgressDate_Year = 2024,
+                            ProgressId = new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344")
+                        },
+                        new
+                        {
+                            Id = new Guid("ceafc64d-6248-43d2-904b-8f37b7885eae"),
+                            ProgressColumnHead = "Time",
+                            ProgressColumnValue = "26:18",
+                            ProgressDate_Day = 10,
+                            ProgressDate_Month = 1,
+                            ProgressDate_Year = 2024,
+                            ProgressId = new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344")
+                        },
+                        new
+                        {
+                            Id = new Guid("75b8809b-827f-4f1c-9fa4-d81b5eedcc57"),
+                            ProgressColumnHead = "Time",
+                            ProgressColumnValue = "24:05",
+                            ProgressDate_Day = 15,
+                            ProgressDate_Month = 1,
+                            ProgressDate_Year = 2024,
+                            ProgressId = new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344")
+                        },
+                        new
+                        {
+                            Id = new Guid("44e76a73-bdbf-48ee-9b20-73a4082a2624"),
+                            ProgressColumnHead = "Time",
+                            ProgressColumnValue = "27:18",
+                            ProgressDate_Day = 20,
+                            ProgressDate_Month = 1,
+                            ProgressDate_Year = 2024,
                             ProgressId = new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344")
                         });
                 });

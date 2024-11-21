@@ -8,6 +8,15 @@ namespace Mirror.Infrastructure.Services.Repository.Progress
     {
         private readonly MirrorContext _context = context;
 
+        public async Task<Mirror.Domain.Entities.Progress> CreateProgress(Mirror.Domain.Entities.Progress progress)
+        {
+            await _context.Progresses.AddAsync(progress);
+
+            await _context.SaveChangesAsync();
+
+            return progress;
+        }
+
         public async Task<List<Mirror.Domain.Entities.Progress>> GetProgressesAsync()
         {
             return await _context.Progresses

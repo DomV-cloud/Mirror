@@ -6,8 +6,8 @@ namespace Mirror.Contracts.Progress
     {
         public string Description { get; set; } = null!;
 
-        public DateTime Date { get; set; }
-
+        public string ProgressColumnHead { get; set; } = null!;
+        
         public List<ProgressValueDTO> ProgressValue { get; set; } = [];
     }
 }

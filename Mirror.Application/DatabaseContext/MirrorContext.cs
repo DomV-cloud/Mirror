@@ -19,12 +19,14 @@ namespace Mirror.Application.DatabaseContext
         {
             base.OnModelCreating(modelBuilder);
 
+            // Nastavení relací mezi tabulkami
             modelBuilder.Entity<Progress>()
-            .HasMany(p => p.ProgressValue)
-            .WithOne(pv => pv.Progress)
-            .HasForeignKey(pv => pv.ProgressId)
-            .OnDelete(DeleteBehavior.Cascade);
+                .HasMany(p => p.ProgressValue)
+                .WithOne(pv => pv.Progress)
+                .HasForeignKey(pv => pv.ProgressId)
+                .OnDelete(DeleteBehavior.Cascade);
 
+            // Seedování uživatelů
             modelBuilder.Entity<User>().HasData(
                 new User
                 {
@@ -48,33 +50,89 @@ namespace Mirror.Application.DatabaseContext
                 new Progress
                 {
                     Id = Guid.Parse("89e39006-abb0-4d6c-a045-e36a1aa4c62e"),
-                    Description = "Initial progress entry for John",
-                    Date = DateTime.Now,
+                    ProgressName = "Weight",
+                    Description = "Cutting body fat",
                     UserId = Guid.Parse("36165a94-1a9c-43dd-bf13-97a4e61e8b89")
                 },
                 new Progress
                 {
                     Id = Guid.Parse("42f99827-ca6e-4f5b-a31f-a99458c2e344"),
-                    Description = "Initial progress entry for Jane",
-                    Date = DateTime.Now,
+                    ProgressName = "Time",
+                    Description = "Training to Marathon",
                     UserId = Guid.Parse("6d3080d4-5dbf-4549-8ac1-77713785de2a")
                 }
             );
 
             modelBuilder.Entity<ProgressValue>().HasData(
-                new ProgressValue
+                new
                 {
                     Id = Guid.NewGuid(),
                     ProgressColumnHead = "Weight",
-                    ProgressColumnValue = "70",
-                    ProgressId = Guid.Parse("89e39006-abb0-4d6c-a045-e36a1aa4c62e")
+                    ProgressColumnValue = "71",
+                    ProgressId = Guid.Parse("89e39006-abb0-4d6c-a045-e36a1aa4c62e"),
+                    ProgressDate_Day = 6,
+                    ProgressDate_Month = 8,
+                    ProgressDate_Year = 2024
                 },
-                new ProgressValue
+                new
                 {
                     Id = Guid.NewGuid(),
-                    ProgressColumnHead = "BMI",
-                    ProgressColumnValue = "22",
-                    ProgressId = Guid.Parse("42f99827-ca6e-4f5b-a31f-a99458c2e344")
+                    ProgressColumnHead = "Weight",
+                    ProgressColumnValue = "72",
+                    ProgressId = Guid.Parse("89e39006-abb0-4d6c-a045-e36a1aa4c62e"),
+                    ProgressDate_Day = 10,
+                    ProgressDate_Month = 8,
+                    ProgressDate_Year = 2024
+                },
+                new
+                {
+                    Id = Guid.NewGuid(),
+                    ProgressColumnHead = "Weight",
+                    ProgressColumnValue = "73",
+                    ProgressId = Guid.Parse("89e39006-abb0-4d6c-a045-e36a1aa4c62e"),
+                    ProgressDate_Day = 12,
+                    ProgressDate_Month = 8,
+                    ProgressDate_Year = 2024
+                },
+                new
+                {
+                    Id = Guid.NewGuid(),
+                    ProgressColumnHead = "Time",
+                    ProgressColumnValue = "25:17",
+                    ProgressId = Guid.Parse("42f99827-ca6e-4f5b-a31f-a99458c2e344"),
+                    ProgressDate_Day = 5,
+                    ProgressDate_Month = 1,
+                    ProgressDate_Year = 2024
+                },
+                new
+                {
+                    Id = Guid.NewGuid(),
+                    ProgressColumnHead = "Time",
+                    ProgressColumnValue = "26:18",
+                    ProgressId = Guid.Parse("42f99827-ca6e-4f5b-a31f-a99458c2e344"),
+                    ProgressDate_Day = 10,
+                    ProgressDate_Month = 1,
+                    ProgressDate_Year = 2024
+                },
+                new
+                {
+                    Id = Guid.NewGuid(),
+                    ProgressColumnHead = "Time",
+                    ProgressColumnValue = "24:05",
+                    ProgressId = Guid.Parse("42f99827-ca6e-4f5b-a31f-a99458c2e344"),
+                    ProgressDate_Day = 15,
+                    ProgressDate_Month = 1,
+                    ProgressDate_Year = 2024
+                },
+                new
+                {
+                    Id = Guid.NewGuid(),
+                    ProgressColumnHead = "Time",
+                    ProgressColumnValue = "27:18",
+                    ProgressId = Guid.Parse("42f99827-ca6e-4f5b-a31f-a99458c2e344"),
+                    ProgressDate_Day = 20,
+                    ProgressDate_Month = 1,
+                    ProgressDate_Year = 2024
                 }
             );
         }

@@ -32,6 +32,7 @@ namespace Mirror.Api.Controllers
             {
                 return BadRequest(ModelState);
             }
+
             var authResult = _authenticationService.Register(
                    request.FirstName,
                    request.LastName,

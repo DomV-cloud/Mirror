@@ -1,5 +1,4 @@
-﻿using Mirror.Domain.Entities;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace Mirror.Domain.Entities
@@ -24,6 +23,5 @@ namespace Mirror.Domain.Entities
 
         [JsonPropertyName("progress")]
         public List<Progress> Progresses { get; set; } = [];
-
     }
 }
