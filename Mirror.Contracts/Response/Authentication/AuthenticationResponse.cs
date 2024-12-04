@@ -1,5 +1,4 @@
-﻿
-namespace Mirror.Contracts.Authentication
+﻿namespace Mirror.Contracts.Response.Authentication
 {
     public record AuthenticationResponse
     (

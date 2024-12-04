@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mirror.Contracts.Authentication
+namespace Mirror.Contracts.Request.Authentication
 {
     public record LoginRequest
     (

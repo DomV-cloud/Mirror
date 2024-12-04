@@ -8,6 +8,7 @@ using Mirror.Application.DatabaseContext;
 using Mirror.Application.DependencyInjection;
 using Mirror.Infrastructure.DependencyInjection;
 using Mirror.Infrastructure.Mapper.Progress;
+using Newtonsoft.Json;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +16,10 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Logging.ClearProviders();
     builder.Logging.AddConsole();
 
-    builder.Services.AddControllers(options => options.Filters.Add<ErrorHandlingFilterAttribute>());
+    builder.Services
+        .AddControllers(options => options.Filters.Add<ErrorHandlingFilterAttribute>())
+        .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
     builder.Services.AddAutoMapper(typeof(ProgressMapperProfile));
@@ -36,8 +40,10 @@ var builder = WebApplication.CreateBuilder(args);
             });
     });
 
-    builder.Services.AddDbContext<MirrorContext>(options =>
-               options.UseSqlServer(builder.Configuration.GetConnectionString("sqlConnection")));
+    builder.Services.AddDbContext<MirrorContext>(options => {
+        options.UseSqlServer(builder.Configuration.GetConnectionString("sqlConnection"));
+        options.EnableSensitiveDataLogging(true);
+    });
 
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>

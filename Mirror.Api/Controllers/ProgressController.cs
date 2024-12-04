@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Mirror.Api.Filters;
 using Mirror.Application.Services.Repository.Progresses;
-using Mirror.Contracts.Progress;
+using Mirror.Contracts.Request.Progress;
+using Mirror.Contracts.Response.Progress;
 using Mirror.Domain.Entities;
 
 namespace Mirror.Api.Controllers
@@ -38,6 +39,17 @@ namespace Mirror.Api.Controllers
             return Ok(response);
         }
 
+        [HttpGet("get/{progressId:guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProgressDTO))]
+        public async Task<IActionResult> GetAll(Guid progressId)
+        {
+            var progress = await _progressRepository.GetProgressesById(progressId);
+
+            var response = _mapper.Map<CreatedProgressResponse>(progress);
+
+            return Ok(response);
+        }
+
         [HttpPost("create-progress", Name = "create-progress")]
         public async Task<IActionResult> CreateProgress([FromBody] CreateProgressDTO progress)
         {
@@ -46,9 +58,12 @@ namespace Mirror.Api.Controllers
                 return BadRequest();
             }
 
+            // mapping two times, consider to use only DTO model from input 
             var mappedProgress = _mapper.Map<Mirror.Domain.Entities.Progress>(progress);
 
-            var response = await _progressRepository.CreateProgress(mappedProgress);
+            var createdProgress = await _progressRepository.CreateProgress(mappedProgress);
+
+            var response = _mapper.Map<CreatedProgressResponse>(createdProgress);
 
             return Ok(response);
         }

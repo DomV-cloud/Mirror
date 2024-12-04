@@ -7,6 +7,8 @@ namespace Mirror.Application.Services.Repository.Progresses
 
         public Task<List<Progress>> GetProgressesByUserAsync(Guid userId);
 
+        public Task<Progress> GetProgressesById(Guid progressId);
+
         public Task<Progress> CreateProgress(Progress progress);
     }
 }
