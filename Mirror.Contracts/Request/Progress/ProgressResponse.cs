@@ -2,7 +2,7 @@
 
 namespace Mirror.Contracts.Request.Progress
 {
-    public class ProgressDTO
+    public class ProgressResponse
     {
         public string Description { get; set; } = null!;
 

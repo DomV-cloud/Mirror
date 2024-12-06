@@ -4,9 +4,8 @@ namespace Mirror.Application.Common.Interfaces.Persistance
 {
     public interface IUserRepository
     {
-        User? GetUserByEmailSync(string email);
+        User? GetUserByEmail(string email);
 
         void Add(User user);
-
     }
 }
