@@ -2,7 +2,7 @@
 
 namespace Mirror.Contracts.Request.Progress
 {
-    public record CreateProgressResponse(
+    public record CreateProgressRequest(
         string ProgressName,
         List<ProgressValueDTO>? ProgressValue,
         Guid UserId

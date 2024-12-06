@@ -1,3 +1,4 @@
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -40,7 +41,8 @@ var builder = WebApplication.CreateBuilder(args);
             });
     });
 
-    builder.Services.AddDbContext<MirrorContext>(options => {
+    builder.Services.AddDbContext<MirrorContext>(options =>
+    {
         options.UseSqlServer(builder.Configuration.GetConnectionString("sqlConnection"));
         options.EnableSensitiveDataLogging(true);
     });

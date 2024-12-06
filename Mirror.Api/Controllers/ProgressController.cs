@@ -17,13 +17,13 @@ namespace Mirror.Api.Controllers
     //[Authorize]
     public class ProgressController : Controller
     {
-        private readonly ILogger<AuthenticationController> _logger;
+        private readonly ILogger<ProgressController> _logger;
         private readonly IProgressRepository _progressRepository;
         private readonly IProgressValueRepository _progressValueRepository;
         private readonly IMapper _mapper;
 
         public ProgressController(
-            ILogger<AuthenticationController> logger,
+            ILogger<ProgressController> logger,
             IProgressRepository progressRepository,
             IMapper mapper,
             IProgressValueRepository progressValueRepository)
@@ -68,7 +68,7 @@ namespace Mirror.Api.Controllers
         }
 
         [HttpPost("progress")]
-        public async Task<IActionResult> CreateProgress([FromBody] CreateProgressResponse progress)
+        public async Task<IActionResult> CreateProgress([FromBody] CreateProgressRequest progress)
         {
             if (progress is null)
             {
