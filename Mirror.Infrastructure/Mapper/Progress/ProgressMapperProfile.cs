@@ -10,10 +10,10 @@ namespace Mirror.Infrastructure.Mapper.Progress
         public ProgressMapperProfile()
         {
             // FROM object mapp TO DTO object 
-            CreateMap<Mirror.Domain.Entities.Progress, ProgressResponse>();
+            CreateMap<Domain.Entities.Progress, ProgressResponse>();
             CreateMap<Mirror.Domain.Entities.ProgressValue, ProgressValueDTO>();
 
-            CreateMap<Mirror.Domain.Entities.Progress, CreatedProgressResponse>()
+            CreateMap<Domain.Entities.Progress, ProgressResponse>()
                 .ForMember(dest => dest.CreatedProgressId, opt => opt.MapFrom(src => src.Id)); ;
 
             // FROM DTO to object

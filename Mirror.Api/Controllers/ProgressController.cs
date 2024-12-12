@@ -52,7 +52,7 @@ namespace Mirror.Api.Controllers
         }
 
         [HttpGet("{progressId:guid}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CreatedProgressResponse))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProgressResponse))]
         public async Task<IActionResult> GetProgressById([FromRoute] Guid progressId)
         {
             if (progressId == Guid.Empty)
@@ -62,39 +62,35 @@ namespace Mirror.Api.Controllers
 
             var progress = await _progressRepository.GetProgressesById(progressId);
 
-            var response = _mapper.Map<CreatedProgressResponse>(progress);
+            if (progress is null)
+            {
+                return NotFound();
+            }
+
+            var response = _mapper.Map<ProgressResponse>(progress);
 
             return Ok(response);
         }
 
-        [HttpPost("progress")]
-        public async Task<IActionResult> CreateProgress([FromBody] CreateProgressRequest progress)
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateProgress([FromBody] CreateProgressRequest request)
         {
-            if (progress is null)
+            if (request is null)
             {
+                _logger.LogWarning("Progress is null");
                 return BadRequest();
             }
 
-            var mappedProgress = _mapper.Map<Mirror.Domain.Entities.Progress>(progress);
+            var mappedProgress = _mapper.Map<Mirror.Domain.Entities.Progress>(request);
+            _logger.LogInformation("Succesfully mapped progress with {ProgressId}", mappedProgress.Id);
 
             var createdProgress = await _progressRepository.CreateProgress(mappedProgress);
+            _logger.LogInformation("Succesfully created progress with {ProgressId}", createdProgress.Id);
 
-            var response = _mapper.Map<CreatedProgressResponse>(createdProgress);
+            var response = _mapper.Map<ProgressResponse>(createdProgress);
+            _logger.LogInformation("Succesfully mapped progress with {ProgressId}", response.CreatedProgressId);
 
-            return CreatedAtAction(nameof(GetProgressById), response.CreatedProgressId, response);
-        }
-
-        [HttpGet("{progressId:guid}/progress-values")]
-        public async Task<IActionResult> GetAllProgressValuesByProgressId([FromRoute] Guid progressId)
-        {
-            if (progressId == Guid.Empty)
-            {
-                return BadRequest();
-            }
-
-            var progressValues = await _progressValueRepository.GetProgressValueByProgressAsync(progressId);
-
-            return Ok(progressValues);
+            return CreatedAtAction(nameof(CreateProgress), response.CreatedProgressId, response);
         }
     }
 }
