@@ -1,6 +1,6 @@
 ﻿using Mirror.Contracts.Request.ProgressValue;
 
-namespace Mirror.Contracts.Request.Progress
+namespace Mirror.Contracts.Request.Progress.POST
 {
     public record CreateProgressRequest(
         string ProgressName,

@@ -4,7 +4,8 @@ using Microsoft.IdentityModel.Tokens;
 using Mirror.Api.Filters;
 using Mirror.Application.Services.Repository.Progresses;
 using Mirror.Application.Services.Repository.ProgressValues;
-using Mirror.Contracts.Request.Progress;
+using Mirror.Contracts.Request.Progress.POST;
+using Mirror.Contracts.Request.Progress.PUT;
 using Mirror.Contracts.Response.Progress;
 using Mirror.Domain.Entities;
 using System;
@@ -37,11 +38,12 @@ namespace Mirror.Api.Controllers
         [HttpGet("progresses")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ProgressResponse>))]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllProgresses()
         {
             var progress = await _progressRepository.GetProgressesAsync();
 
-            if (progress.Count == 0 || progress is null)
+            if (progress.Count == 0)
             {
                 return NoContent();
             }
@@ -53,6 +55,9 @@ namespace Mirror.Api.Controllers
 
         [HttpGet("{progressId:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProgressResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetProgressById([FromRoute] Guid progressId)
         {
             if (progressId == Guid.Empty)
@@ -60,7 +65,7 @@ namespace Mirror.Api.Controllers
                 return BadRequest();
             }
 
-            var progress = await _progressRepository.GetProgressesById(progressId);
+            var progress = await _progressRepository.GetProgressesByIdAsync(progressId);
 
             if (progress is null)
             {
@@ -73,7 +78,10 @@ namespace Mirror.Api.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreateProgress([FromBody] CreateProgressRequest request)
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ProgressResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CreateProgressAsync([FromBody] CreateProgressRequest request)
         {
             if (request is null)
             {
@@ -84,13 +92,55 @@ namespace Mirror.Api.Controllers
             var mappedProgress = _mapper.Map<Mirror.Domain.Entities.Progress>(request);
             _logger.LogInformation("Succesfully mapped progress with {ProgressId}", mappedProgress.Id);
 
-            var createdProgress = await _progressRepository.CreateProgress(mappedProgress);
+            var createdProgress = await _progressRepository.CreateProgressAsync(mappedProgress);
             _logger.LogInformation("Succesfully created progress with {ProgressId}", createdProgress.Id);
 
             var response = _mapper.Map<ProgressResponse>(createdProgress);
             _logger.LogInformation("Succesfully mapped progress with {ProgressId}", response.CreatedProgressId);
 
-            return CreatedAtAction(nameof(CreateProgress), response.CreatedProgressId, response);
+            return Created(nameof(CreateProgressAsync), response);
+        }
+
+        [HttpPut("/{id:guid}")]
+        public async Task<IActionResult> PutProgress(Guid id, [FromBody] UpdateProgressRequest request)
+        {
+            if (id == Guid.Empty)
+            {
+                return BadRequest("Invalid ID from URL");
+            }
+
+            if (id != request.Id)
+            {
+                return BadRequest("ID in URL does not match ID in the request body.");
+            }
+
+            if (request == null)
+            {
+                return BadRequest("Request body cannot be null.");
+            }
+
+            var existingProgress = await _progressRepository.GetProgressesByIdAsync(id);
+
+            if (existingProgress is null)
+            {
+                return NotFound($"Progress with this ID {id} does not exixsts");
+            }
+
+            var mappedProgress = _mapper.Map<Mirror.Domain.Entities.Progress>(request);
+
+            if (mappedProgress is null)
+            {
+                return BadRequest("Invalid request data. Mapping failed.");
+            }
+
+            bool isSuccess = await _progressRepository.UpdateProgress(existingProgress, mappedProgress);
+
+            if (!isSuccess)
+            {
+                return BadRequest();
+            }
+
+            return Ok(existingProgress);
         }
     }
 }

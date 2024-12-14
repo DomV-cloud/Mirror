@@ -8,7 +8,7 @@ namespace Mirror.Infrastructure.Services.Repository.Progress
     {
         private readonly MirrorContext _context = context;
 
-        public async Task<Mirror.Domain.Entities.Progress> CreateProgress(Mirror.Domain.Entities.Progress progress)
+        public async Task<Mirror.Domain.Entities.Progress> CreateProgressAsync(Mirror.Domain.Entities.Progress progress)
         {
             await _context.Progresses.AddAsync(progress);
 
@@ -19,21 +19,27 @@ namespace Mirror.Infrastructure.Services.Repository.Progress
 
         public async Task<List<Mirror.Domain.Entities.Progress>> GetProgressesAsync()
         {
-            return await _context.Progresses
+            var progresses = await _context.Progresses
                 .AsNoTracking()
                 .Include(p => p.ProgressValue)
                 .ToListAsync();
+
+            if (progresses is null)
+            {
+                return [];
+            }
+
+            return progresses;
         }
 
-        public async Task<Domain.Entities.Progress> GetProgressesById(Guid progressId)
+        public async Task<Domain.Entities.Progress> GetProgressesByIdAsync(Guid progressId)
         {
             var retrievedProgress = await _context.Progresses
                 .AsNoTracking()
                 .Include(p => p.ProgressValue)
                 .FirstOrDefaultAsync(p => p.Id == progressId);
 
-
-            if (retrievedProgress is null)
+            if (retrievedProgress is null || retrievedProgress.ProgressValue.Count == 0)
             {
                 return new();
             }
@@ -48,6 +54,20 @@ namespace Mirror.Infrastructure.Services.Repository.Progress
                 .Where(p => p.UserId == userId)
                 .Include(p => p.ProgressValue)
                 .ToListAsync();
+        }
+
+        public async Task<bool> UpdateProgress(Domain.Entities.Progress existingProgress, Domain.Entities.Progress newProgress)
+        {
+            _context.Entry(existingProgress).CurrentValues.SetValues(newProgress);
+
+            int success = await _context.SaveChangesAsync();
+
+            if (success == 0)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

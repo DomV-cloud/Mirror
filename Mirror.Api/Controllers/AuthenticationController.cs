@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Mirror.Api.Filters;
 using Mirror.Application.Services.Authentication;
-using Mirror.Contracts.Request.Authentication;
+using Mirror.Contracts.Request.Authentication.GET;
+using Mirror.Contracts.Request.Authentication.POST;
 using Mirror.Contracts.Response.Authentication;
 
 namespace Mirror.Api.Controllers

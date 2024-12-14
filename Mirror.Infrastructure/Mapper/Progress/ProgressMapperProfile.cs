@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using Mirror.Contracts.Request.Progress;
+using Mirror.Contracts.Request.Progress.POST;
+using Mirror.Contracts.Request.Progress.PUT;
 using Mirror.Contracts.Request.ProgressValue;
 using Mirror.Contracts.Response.Progress;
 
@@ -20,6 +21,8 @@ namespace Mirror.Infrastructure.Mapper.Progress
             CreateMap<CreateProgressRequest, Mirror.Domain.Entities.Progress>();
             CreateMap<ProgressValueDTO, Mirror.Domain.Entities.ProgressValue>();
 
+            CreateMap<UpdateProgressRequest, Mirror.Domain.Entities.Progress>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore());
         }
     }
 }
