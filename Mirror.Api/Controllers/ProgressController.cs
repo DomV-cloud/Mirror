@@ -101,7 +101,7 @@ namespace Mirror.Api.Controllers
             return Created(nameof(CreateProgressAsync), response);
         }
 
-        [HttpPut("/{id:guid}")]
+        [HttpPut("{id:guid}")]
         public async Task<IActionResult> PutProgress(Guid id, [FromBody] UpdateProgressRequest request)
         {
             if (id == Guid.Empty)
@@ -109,9 +109,9 @@ namespace Mirror.Api.Controllers
                 return BadRequest("Invalid ID from URL");
             }
 
-            if (id != request.Id)
+            if (request.UserId == Guid.Empty)
             {
-                return BadRequest("ID in URL does not match ID in the request body.");
+                return BadRequest("ID of the user does not extists.");
             }
 
             if (request == null)

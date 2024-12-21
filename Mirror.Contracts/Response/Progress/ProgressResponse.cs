@@ -1,4 +1,5 @@
 ﻿using Mirror.Contracts.Request.ProgressValue;
+using Mirror.Domain.Entities;
 
 namespace Mirror.Contracts.Response.Progress
 {
@@ -6,7 +7,7 @@ namespace Mirror.Contracts.Response.Progress
     {
         public Guid CreatedProgressId { get; set; }
 
-        public List<ProgressValueDTO> ProgressValue { get; set; } = [];
+        public Dictionary<string, List<ProgressValueDTO>> ProgressValue = [];
 
         public string ProgressName { get; set; } = null!;
 

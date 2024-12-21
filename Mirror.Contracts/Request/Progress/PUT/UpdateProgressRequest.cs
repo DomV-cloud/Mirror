@@ -2,16 +2,12 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Mirror.Contracts.Request.ProgressValue;
 
 namespace Mirror.Contracts.Request.Progress.PUT
 {
     public class UpdateProgressRequest
     {
-        /// <summary>
-        /// Id of the request DTO
-        /// </summary>
-        public Guid Id { get; set; } = Guid.NewGuid();
-
         /// <summary>
         /// Name of the progress metric (e.g., weight, time).
         /// </summary>
@@ -27,18 +23,12 @@ namespace Mirror.Contracts.Request.Progress.PUT
         /// <summary>
         /// Foreign key linking to the associated user.
         /// </summary>
-        [ForeignKey(nameof(User))]
         public Guid? UserId { get; set; }
-
-        /// <summary>
-        /// Reference to the user entity.
-        /// </summary>
-        public User User { get; set; } = null!;
 
         /// <summary>
         /// Collection of progress values representing tracked data points for the metric.
         /// </summary>
         [JsonPropertyName("progressValues")]
-        public List<Mirror.Domain.Entities.ProgressValue>? ProgressValue { get; set; } = [];
+        public Dictionary<string, List<ProgressValueDTO>> ProgressValues { get; set; } = [];
     }
 }

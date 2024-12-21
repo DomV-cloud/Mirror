@@ -1,12 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Mirror.Application.DatabaseContext;
 using Mirror.Application.Services.Repository.Progresses;
+using Mirror.Domain.Entities;
 
 namespace Mirror.Infrastructure.Services.Repository.Progress
 {
-    public class ProgressRepository(MirrorContext context) : IProgressRepository
+    public class ProgressRepository(MirrorContext context, ILogger<ProgressRepository> logger) : IProgressRepository
     {
         private readonly MirrorContext _context = context;
+        private readonly ILogger<ProgressRepository> _logger = logger;
 
         public async Task<Mirror.Domain.Entities.Progress> CreateProgressAsync(Mirror.Domain.Entities.Progress progress)
         {
@@ -58,12 +61,28 @@ namespace Mirror.Infrastructure.Services.Repository.Progress
 
         public async Task<bool> UpdateProgress(Domain.Entities.Progress existingProgress, Domain.Entities.Progress newProgress)
         {
-            _context.Entry(existingProgress).CurrentValues.SetValues(newProgress);
+            if (_context.Entry(existingProgress).State == EntityState.Detached)
+            {
+                _context.Progresses.Attach(existingProgress);
+            }
+
+            // Nastavit stav na Modified, aby EF Core věděl, že se jedná o aktualizaci
+             v_context.Entry(existingProgress).CurrentValues.SetValues(newProgress);
+            _context.Entry(existingProgress).State = EntityState.Modified;
+
+            // Zkontroluj, zda existují nějaké změny v entitě
+            var entry = _context.Entry(existingProgress);
+            if (entry.State == EntityState.Unchanged)
+            {
+                _logger.LogWarning($"No changes detected in {nameof(UpdateProgress)}.");
+                return false;
+            }
 
             int success = await _context.SaveChangesAsync();
 
             if (success == 0)
             {
+                _logger.LogWarning($"No changes in {nameof(UpdateProgress)} were saved to the database");
                 return false;
             }
 
