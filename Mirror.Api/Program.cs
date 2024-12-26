@@ -8,6 +8,7 @@ using Mirror.Api.Middleware;
 using Mirror.Application.DatabaseContext;
 using Mirror.Application.DependencyInjection;
 using Mirror.Infrastructure.DependencyInjection;
+using Mirror.Infrastructure.Mapper.Image;
 using Mirror.Infrastructure.Mapper.Progress;
 using Newtonsoft.Json;
 using System.Text;
@@ -23,7 +24,9 @@ var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
-    builder.Services.AddAutoMapper(typeof(ProgressMapperProfile));
+    builder.Services
+        .AddAutoMapper(typeof(ProgressMapperProfile))
+        .AddAutoMapper(typeof(ImageMapperProfile));
 
     builder.Services
         .AddApplication()

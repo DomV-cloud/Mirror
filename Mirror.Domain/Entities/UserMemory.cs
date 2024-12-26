@@ -28,7 +28,7 @@ namespace Mirror.Domain.Entities
         /// Value how often should user memory remind. Default value is 'monthly'
         /// </summary>
         [JsonPropertyName("reminder")]
-        public Reminder SetReminder { get; set; } = Reminder.monthly;
+        public Reminder SetReminder { get; set; } = Reminder.monthly; // This is temp solution for PoC. E.g. TODO: Create own Entity 
 
         /// <summary>
         /// Id of the user
