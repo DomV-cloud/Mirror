@@ -17,6 +17,7 @@ namespace Mirror.Application.DatabaseContext
         public DbSet<Progress> Progresses => Set<Progress>();
         public DbSet<ProgressValue> ProgressValues => Set<ProgressValue>();
         public DbSet<Image> Images => Set<Image>();
+        public DbSet<UserMemory> Memories => Set<UserMemory>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
