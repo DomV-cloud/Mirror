@@ -67,7 +67,7 @@ namespace Mirror.Infrastructure.Services.Repository.Progress
             }
 
             // Nastavit stav na Modified, aby EF Core věděl, že se jedná o aktualizaci
-             v_context.Entry(existingProgress).CurrentValues.SetValues(newProgress);
+            _context.Entry(existingProgress).CurrentValues.SetValues(newProgress);
             _context.Entry(existingProgress).State = EntityState.Modified;
 
             // Zkontroluj, zda existují nějaké změny v entitě

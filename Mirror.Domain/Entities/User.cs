@@ -22,6 +22,6 @@ namespace Mirror.Domain.Entities
         public string Password { get; set; } = null!;
 
         [JsonPropertyName("progress")]
-        public List<Progress> Progresses { get; set; } = [];
+        public List<Progress>? Progresses { get; set; } = [];
     }
 }

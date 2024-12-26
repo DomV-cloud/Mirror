@@ -1,5 +1,6 @@
-﻿using Mirror.Application.Services.Authentication;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Mirror.Application.Services.Authentication;
+using Mirror.Application.Services.FileService;
 
 namespace Mirror.Application.DependencyInjection
 {
@@ -8,6 +9,7 @@ namespace Mirror.Application.DependencyInjection
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IFileService, FileService>();
 
             return services;
         }

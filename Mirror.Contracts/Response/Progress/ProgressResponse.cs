@@ -1,5 +1,5 @@
 ﻿using Mirror.Contracts.Request.ProgressValue;
-using Mirror.Domain.Entities;
+using Mirror.Domain.Enums.Progress;
 
 namespace Mirror.Contracts.Response.Progress
 {
@@ -13,6 +13,10 @@ namespace Mirror.Contracts.Response.Progress
 
         public string Description { get; set; } = null!;
 
-        public string ProgressColumnHead { get; set; } = null!;
+        public string? TrackingProgressDays { get; set; }
+
+        public double PercentageAchieved { get; set; }
+
+        public bool? IsAchieved { get; set; }
     }
 }

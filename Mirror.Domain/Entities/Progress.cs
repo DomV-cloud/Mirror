@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Mirror.Domain.Enums.Progress;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
@@ -12,7 +13,6 @@ namespace Mirror.Domain.Entities
         /// <summary>
         /// Name of the progress metric (e.g., weight, time).
         /// </summary>
-        [Required]
         [JsonPropertyName("progressName")]
         public string ProgressName { get; set; } = null!;
 
@@ -38,5 +38,35 @@ namespace Mirror.Domain.Entities
         /// </summary>
         [JsonPropertyName("progressValues")]
         public List<ProgressValue> ProgressValue { get; set; } = [];
+
+        /// <summary>
+        /// Shows if the user already achieved the progress
+        /// </summary>
+        [JsonPropertyName("isAchieved")]
+        public bool? IsAchieved { get; set; }
+
+        /// <summary>
+        /// How many days is progress tracked
+        /// </summary>
+        [JsonPropertyName("trackedDays")]
+        public double TrackedDays { get; set; } = 0;
+
+        /// <summary>
+        /// Day when user update progress tracking
+        /// </summary>
+        [JsonPropertyName("trackingProgressDay")]
+        public TrackingProgressDays TrackingProgressDay { get; set; } = TrackingProgressDays.Monday;
+
+        /// <summary>
+        /// How many percentage user already achieved progress
+        /// </summary>
+        [JsonPropertyName("percentageAchieved")]
+        public double PercentageAchieved { get; set; } = 0;
+
+        /// <summary>
+        /// Date when was last time progress tracked/updated
+        /// </summary>
+        [JsonPropertyName("updated")]
+        public DateTime? Updated { get; set; }
     }
 }

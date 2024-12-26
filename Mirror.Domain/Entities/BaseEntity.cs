@@ -9,5 +9,8 @@ namespace Mirror.Domain.Entities
         [Key]
         [JsonPropertyName("id")]
         public Guid Id { get; set; } = Guid.NewGuid();
+
+        [JsonPropertyName("saved")]
+        public DateTime SavedDate { get; set; } = DateTime.UtcNow;
     }
 }

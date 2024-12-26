@@ -57,10 +57,9 @@ namespace Tests.MockData.Progress
         {
             return new Faker<ProgressResponse>()
                 .RuleFor(v => v.CreatedProgressId, f => createdProgressId ?? Guid.NewGuid())
-                .RuleFor(v => v.ProgressValue, f => FakeProgressValue.GenerateProgressValueDTO(dtosCount))
+                //.RuleFor(v => v.ProgressValue, f => FakeProgressValue.GenerateProgressValueDTO(dtosCount))
                 .RuleFor(v => v.ProgressName, f => progressName ?? f.Commerce.ProductName())
                 .RuleFor(v => v.Description, f => description ?? f.Lorem.Sentence(10))
-                .RuleFor(v => v.ProgressColumnHead, f => progressColumnHead ?? f.PickRandom(new[] { "Weight", "Height", "Steps" }))
                 .Generate(count);
         }
     }

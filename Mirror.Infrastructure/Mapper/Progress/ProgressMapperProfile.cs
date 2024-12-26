@@ -28,6 +28,7 @@ namespace Mirror.Infrastructure.Mapper.Progress
 
             // FROM DTO to object
             CreateMap<CreateProgressRequest, Mirror.Domain.Entities.Progress>();
+
             CreateMap<ProgressValueDTO, Mirror.Domain.Entities.ProgressValue>();
 
             CreateMap<UpdateProgressRequest, Mirror.Domain.Entities.Progress>()
