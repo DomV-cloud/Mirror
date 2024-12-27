@@ -43,19 +43,24 @@ namespace Mirror.Application.Services.FileService
 
         public async Task<string> SaveFileToDisk(IFormFile file, Guid memoryId)
         {
-            var uploadPath = Path.Combine("wwwroot/images/memories", memoryId.ToString());
-            Directory.CreateDirectory(uploadPath);
+            var memoryPath = Path.Combine("C:/mirror/memories", memoryId.ToString());
 
-            var filePath = Path.Combine(uploadPath, file.FileName);
+            if (!Directory.Exists(memoryPath))
+            {
+                Directory.CreateDirectory(memoryPath);
+            }
+            
+            var filePath = Path.Combine(memoryPath, file.FileName);
+
             using var stream = new FileStream(filePath, FileMode.Create);
             await file.CopyToAsync(stream);
 
-            return $"/images/memories/{memoryId}/{file.FileName}";
+            return $"/mirror/memories/{memoryId}/{file.FileName}";
         }
 
         public async Task<string?> ValidateAndSaveFile(IFormFile file, Guid memoryId)
         {
-            if (file.Length > 5 * 1024 * 1024) // Max 5 MB
+            if (file.Length > 5 * 1024 * 1024)
                 throw new InvalidOperationException("File size exceeds limit.");
 
             var validContentTypes = new[] { "image/jpeg", "image/png" };

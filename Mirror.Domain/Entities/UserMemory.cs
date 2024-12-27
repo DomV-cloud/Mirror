@@ -22,7 +22,7 @@ namespace Mirror.Domain.Entities
         /// List of images belongs to memory
         /// </summary>
         [JsonPropertyName("memoryImages")]
-        public List<Image> Images { get; set; } = [];
+        public List<Image>? Images { get; set; } = [];
 
         /// <summary>
         /// Value how often should user memory remind. Default value is 'monthly'

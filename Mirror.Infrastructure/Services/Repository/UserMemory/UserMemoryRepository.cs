@@ -1,4 +1,5 @@
-﻿using Mirror.Application.DatabaseContext;
+﻿using Microsoft.EntityFrameworkCore;
+using Mirror.Application.DatabaseContext;
 using Mirror.Application.Services.Repository.Memory;
 
 namespace Mirror.Infrastructure.Services.Repository.UserMemory
@@ -23,6 +24,20 @@ namespace Mirror.Infrastructure.Services.Repository.UserMemory
             await _context.SaveChangesAsync();
 
             return memoryToSave;
+        }
+
+        public async Task<List<Domain.Entities.UserMemory>> GetAllMemoryByUserId(Guid userId)
+        {
+            var memories = await _context.Memories
+                .AsNoTracking()
+                .Include(memory => memory.Images)
+                .Where(memory => memory.UserId == userId)
+                .ToListAsync();
+
+            if (memories is null)
+                return [];
+
+            return memories;
         }
     }
 }

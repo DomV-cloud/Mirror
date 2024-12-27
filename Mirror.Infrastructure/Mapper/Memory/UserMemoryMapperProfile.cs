@@ -10,7 +10,7 @@ namespace Mirror.Infrastructure.Mapper.Memory
         public UserMemoryMapperProfile()
         {
             CreateMap<UserMemoryCreateRequest, UserMemory>();
-            CreateMap<UserMemory, CreatedUserMemoryResponse>();
+            CreateMap<UserMemory, UserMemoryResponse>();
         }
     }
 }

@@ -65,7 +65,7 @@ namespace Mirror.Api.Controllers
                 return BadRequest();
             }
 
-            var response = _mapper.Map<CreatedUserMemoryResponse>(createdMemory);
+            var response = _mapper.Map<UserMemoryResponse>(createdMemory);
 
             return Created(nameof(CreateMemory), response);
         }

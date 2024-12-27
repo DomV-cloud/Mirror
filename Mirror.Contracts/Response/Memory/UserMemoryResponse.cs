@@ -4,7 +4,7 @@ using Mirror.Domain.Entities;
 
 namespace Mirror.Contracts.Response.Memory
 {
-    public class CreatedUserMemoryResponse
+    public class UserMemoryResponse
     {
         public Guid UserId { get; set; }
 
