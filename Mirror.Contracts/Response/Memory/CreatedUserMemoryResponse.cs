@@ -1,18 +1,19 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Mirror.Contracts.Request.Images;
+using Mirror.Contracts.Request.Images.GET;
+using Mirror.Domain.Entities;
 
-namespace Mirror.Contracts.Request.Memory.POST
+namespace Mirror.Contracts.Response.Memory
 {
-    public record UserMemoryCreateRequest
+    public class CreatedUserMemoryResponse
     {
         public Guid UserId { get; set; }
 
         public string MemoryName { get; set; } = null!;
-        
+
         public string? Description { get; set; }
-       
-        public List<IFormFile>? Images { get; set; } = [];
-        
+
+        public List<ImageResponse>? Images { get; set; } = [];
+
         public string Reminder { get; set; } = null!;
     }
 }

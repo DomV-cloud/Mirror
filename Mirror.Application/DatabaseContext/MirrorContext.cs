@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mirror.Domain.Entities;
 using Mirror.Domain.Enums.Progress;
+using Mirror.Domain.Enums.UserMemory;
 
 namespace Mirror.Application.DatabaseContext
 {
@@ -26,6 +27,10 @@ namespace Mirror.Application.DatabaseContext
             modelBuilder.Entity<Progress>()
             .Property(e => e.TrackingProgressDay)
             .HasConversion(new EnumToStringConverter<TrackingProgressDays>());
+
+            modelBuilder.Entity<UserMemory>()
+            .Property(e => e.Reminder)
+            .HasConversion(new EnumToStringConverter<Reminder>());
 
             modelBuilder.Entity<Progress>()
                 .HasMany(p => p.ProgressValue)

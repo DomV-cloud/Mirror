@@ -9,13 +9,13 @@ namespace Mirror.Domain.Entities
         /// Name of the image
         /// </summary>
         [JsonPropertyName("imageName")]
-        public string Name { get; set; } = null!;
+        public string FileName { get; set; } = null!;
 
         /// <summary>
-        /// Image's data
+        /// Binární data obrázku.
         /// </summary>
-        [JsonPropertyName("imageData")]
-        public byte[] Data { get; set; } = null!;
+        [JsonPropertyName("url")]
+        public string Url { get; set; } = null!;
 
         /// <summary>
         /// Content type of the image

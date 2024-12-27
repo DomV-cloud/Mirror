@@ -5,15 +5,15 @@ namespace Mirror.Domain.Enums.UserMemory
     public enum Reminder
     {
         [Display(Name = "Daily")]
-        daily = 0,
+        Daily = 0,
 
         [Display(Name = "Weekly")]
-        weekly = 1,
+        Weekly = 1,
         
-        [Display(Name = "monthly")]
-        monthly = 2,
+        [Display(Name = "Monthly")]
+        Monthly = 2,
         
-        [Display(Name = "yearly")]
-        yearly = 3
+        [Display(Name = "Yearly")]
+        Yearly = 3
     }
 }
