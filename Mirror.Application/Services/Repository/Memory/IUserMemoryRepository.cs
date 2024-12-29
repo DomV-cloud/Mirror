@@ -7,5 +7,7 @@ namespace Mirror.Application.Services.Repository.Memory
         public Task<UserMemory> CreateMemory(UserMemory memoryToSave);
 
         public Task<List<UserMemory>> GetAllMemoryByUserId(Guid userId);
+
+        public Task<UserMemory> GetMemoryById(Guid memoryId);
     }
 }

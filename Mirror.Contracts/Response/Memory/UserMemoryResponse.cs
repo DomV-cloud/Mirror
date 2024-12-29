@@ -8,6 +8,8 @@ namespace Mirror.Contracts.Response.Memory
     {
         public Guid UserId { get; set; }
 
+        public Guid MemoryId { get; set; }
+
         public string MemoryName { get; set; } = null!;
 
         public string? Description { get; set; }

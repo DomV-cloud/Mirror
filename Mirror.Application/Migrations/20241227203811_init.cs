@@ -36,7 +36,7 @@ namespace Mirror.Application.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     MemoryName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SetReminder = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Reminder = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SavedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -83,7 +83,8 @@ namespace Mirror.Application.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Content = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     ContentType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserMemoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     SavedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -127,8 +128,8 @@ namespace Mirror.Application.Migrations
                 columns: new[] { "Id", "Email", "FirstName", "LastName", "Password", "SavedDate" },
                 values: new object[,]
                 {
-                    { new Guid("36165a94-1a9c-43dd-bf13-97a4e61e8b89"), "john.doe@example.com", "John", "Doe", "hashedpassword123", new DateTime(2024, 12, 27, 12, 52, 12, 843, DateTimeKind.Utc).AddTicks(543) },
-                    { new Guid("6d3080d4-5dbf-4549-8ac1-77713785de2a"), "jane.smith@example.com", "Jane", "Smith", "hashedpassword456", new DateTime(2024, 12, 27, 12, 52, 12, 843, DateTimeKind.Utc).AddTicks(556) }
+                    { new Guid("36165a94-1a9c-43dd-bf13-97a4e61e8b89"), "john.doe@example.com", "John", "Doe", "hashedpassword123", new DateTime(2024, 12, 27, 20, 38, 10, 742, DateTimeKind.Utc).AddTicks(8074) },
+                    { new Guid("6d3080d4-5dbf-4549-8ac1-77713785de2a"), "jane.smith@example.com", "Jane", "Smith", "hashedpassword456", new DateTime(2024, 12, 27, 20, 38, 10, 742, DateTimeKind.Utc).AddTicks(8100) }
                 });
 
             migrationBuilder.InsertData(
@@ -136,8 +137,8 @@ namespace Mirror.Application.Migrations
                 columns: new[] { "Id", "Description", "IsAchieved", "PercentageAchieved", "ProgressName", "SavedDate", "TrackedDays", "TrackingProgressDay", "Updated", "UserId" },
                 values: new object[,]
                 {
-                    { new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), "Training to Marathon", null, 47.0, "Time", new DateTime(2024, 12, 27, 12, 52, 12, 843, DateTimeKind.Utc).AddTicks(939), 0.0, "Thursday", null, new Guid("6d3080d4-5dbf-4549-8ac1-77713785de2a") },
-                    { new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e"), "Cutting body fat", null, 63.0, "Weight", new DateTime(2024, 12, 27, 12, 52, 12, 843, DateTimeKind.Utc).AddTicks(925), 0.0, "Tuesday", null, new Guid("36165a94-1a9c-43dd-bf13-97a4e61e8b89") }
+                    { new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), "Training to Marathon", null, 47.0, "Time", new DateTime(2024, 12, 27, 20, 38, 10, 742, DateTimeKind.Utc).AddTicks(8316), 0.0, "Thursday", null, new Guid("6d3080d4-5dbf-4549-8ac1-77713785de2a") },
+                    { new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e"), "Cutting body fat", null, 63.0, "Weight", new DateTime(2024, 12, 27, 20, 38, 10, 742, DateTimeKind.Utc).AddTicks(8307), 0.0, "Tuesday", null, new Guid("36165a94-1a9c-43dd-bf13-97a4e61e8b89") }
                 });
 
             migrationBuilder.InsertData(
@@ -145,13 +146,13 @@ namespace Mirror.Application.Migrations
                 columns: new[] { "Id", "ProgressColumnHead", "ProgressColumnValue", "ProgressDate_Day", "ProgressDate_Month", "ProgressDate_Year", "ProgressId", "SavedDate" },
                 values: new object[,]
                 {
-                    { new Guid("18497a98-d29a-45fb-aa12-dd014086b0e1"), "Time", "25:17", 5, 1, 2024, new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), new DateTime(2024, 12, 27, 12, 52, 12, 843, DateTimeKind.Utc).AddTicks(1099) },
-                    { new Guid("3b67e133-25d4-4d9e-bfe0-8a8b983fd173"), "Weight", "72", 10, 8, 2024, new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e"), new DateTime(2024, 12, 27, 12, 52, 12, 843, DateTimeKind.Utc).AddTicks(1047) },
-                    { new Guid("44b00923-62b4-4826-8bd2-105aca7a5274"), "Time", "26:18", 10, 1, 2024, new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), new DateTime(2024, 12, 27, 12, 52, 12, 843, DateTimeKind.Utc).AddTicks(1106) },
-                    { new Guid("64a5d69e-1b00-4422-b6ed-de898f26c3d1"), "Time", "24:05", 15, 1, 2024, new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), new DateTime(2024, 12, 27, 12, 52, 12, 843, DateTimeKind.Utc).AddTicks(1112) },
-                    { new Guid("8590a4a9-c3de-4cfc-ab4f-80d4635615b0"), "Time", "27:18", 20, 1, 2024, new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), new DateTime(2024, 12, 27, 12, 52, 12, 843, DateTimeKind.Utc).AddTicks(1119) },
-                    { new Guid("d30167a4-690a-4d9d-8729-13bcde840233"), "Weight", "71", 6, 8, 2024, new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e"), new DateTime(2024, 12, 27, 12, 52, 12, 843, DateTimeKind.Utc).AddTicks(1037) },
-                    { new Guid("f0aa1b6d-f09e-4192-93bd-f3ed2a144ef8"), "Weight", "73", 12, 8, 2024, new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e"), new DateTime(2024, 12, 27, 12, 52, 12, 843, DateTimeKind.Utc).AddTicks(1077) }
+                    { new Guid("4ba3540b-08f3-4387-b945-7ba770a85e25"), "Time", "24:05", 15, 1, 2024, new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), new DateTime(2024, 12, 27, 20, 38, 10, 742, DateTimeKind.Utc).AddTicks(8388) },
+                    { new Guid("656b13cc-43f3-451a-9682-8febbea069a8"), "Weight", "71", 6, 8, 2024, new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e"), new DateTime(2024, 12, 27, 20, 38, 10, 742, DateTimeKind.Utc).AddTicks(8357) },
+                    { new Guid("8f83b08c-6e21-48d8-ae1b-dbab600427b5"), "Weight", "73", 12, 8, 2024, new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e"), new DateTime(2024, 12, 27, 20, 38, 10, 742, DateTimeKind.Utc).AddTicks(8368) },
+                    { new Guid("ab7939e4-73c2-43d5-b69c-3d8ccccb165e"), "Weight", "72", 10, 8, 2024, new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e"), new DateTime(2024, 12, 27, 20, 38, 10, 742, DateTimeKind.Utc).AddTicks(8364) },
+                    { new Guid("b40ca18e-b117-4a34-85df-598d9483546b"), "Time", "25:17", 5, 1, 2024, new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), new DateTime(2024, 12, 27, 20, 38, 10, 742, DateTimeKind.Utc).AddTicks(8372) },
+                    { new Guid("d215325e-645e-4ff7-8e16-7f52469c1679"), "Time", "26:18", 10, 1, 2024, new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), new DateTime(2024, 12, 27, 20, 38, 10, 742, DateTimeKind.Utc).AddTicks(8376) },
+                    { new Guid("fe2bd601-c60d-4392-8920-5eba1324b7fa"), "Time", "27:18", 20, 1, 2024, new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), new DateTime(2024, 12, 27, 20, 38, 10, 742, DateTimeKind.Utc).AddTicks(8392) }
                 });
 
             migrationBuilder.CreateIndex(

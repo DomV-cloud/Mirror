@@ -9,7 +9,7 @@ using Mirror.Application.Services.Repository.Progresses;
 using Mirror.Application.Services.Repository.ProgressValues;
 using Mirror.Infrastructure.Authentication;
 using Mirror.Infrastructure.Mapper.Progress;
-using Mirror.Infrastructure.Persistance;
+using Mirror.Infrastructure.Persistance.Repository.User;
 using Mirror.Infrastructure.Services;
 using Mirror.Infrastructure.Services.Repository.Progress;
 using Mirror.Infrastructure.Services.Repository.ProgressValues;
