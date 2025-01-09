@@ -11,7 +11,8 @@ namespace Mirror.Infrastructure.Mapper.Image
     {
         public ImageMapperProfile()
         {
-            CreateMap<IFormFile, Domain.Entities.Image>();
+            CreateMap<IFormFile, Domain.Entities.Image>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
 
             CreateMap<Domain.Entities.Image, ImageResponse>();
         }

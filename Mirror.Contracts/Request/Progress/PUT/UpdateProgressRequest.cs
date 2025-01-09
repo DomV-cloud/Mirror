@@ -12,7 +12,7 @@ namespace Mirror.Contracts.Request.Progress.PUT
         /// Name of the progress metric (e.g., weight, time).
         /// </summary>
         [JsonPropertyName("progressName")]
-        public string? ProgressName { get; set; } = null!;
+        public string? ProgressName { get; set; }
 
         /// <summary>
         /// Additional description providing context for the progress metric.
@@ -29,6 +29,6 @@ namespace Mirror.Contracts.Request.Progress.PUT
         /// Collection of progress values representing tracked data points for the metric.
         /// </summary>
         [JsonPropertyName("progressValues")]
-        public Dictionary<string, List<ProgressValueDTO>> ProgressValues { get; set; } = [];
+        public Dictionary<string, List<ProgressValueDTO>>? ProgressValues { get; set; } = [];
     }
 }

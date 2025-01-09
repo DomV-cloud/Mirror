@@ -154,7 +154,7 @@ namespace Mirror.Api.Controllers
 
             var existingProgress = await _progressRepository.GetProgressesByIdAsync(progressId);
 
-            if (existingProgress == null)
+            if (existingProgress == null || existingProgress.Id == Guid.Empty)
             {
                 _logger.LogWarning("Progress with ID {ProgressId} not found.", progressId);
                 return NotFound($"Progress with ID {progressId} not found.");
@@ -164,9 +164,9 @@ namespace Mirror.Api.Controllers
             var updatedProgress = _mapper.Map<Progress>(request);
 
             _logger.LogInformation("Updating progress with ID {ProgressId}.", progressId);
-            var isSuccess = await _progressRepository.UpdateProgress(existingProgress, updatedProgress);
+            var isProgressUpdated = await _progressRepository.UpdateProgress(existingProgress, updatedProgress);
 
-            if (!isSuccess)
+            if (!isProgressUpdated)
             {
                 _logger.LogError("Failed to update progress with ID {ProgressId}.", progressId);
                 return BadRequest("Failed to update progress.");

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Mirror.Application.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -96,7 +96,8 @@ namespace Mirror.Application.Migrations
                         name: "FK_Images_Memories_UserMemoryId",
                         column: x => x.UserMemoryId,
                         principalTable: "Memories",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -128,8 +129,8 @@ namespace Mirror.Application.Migrations
                 columns: new[] { "Id", "Email", "FirstName", "LastName", "Password", "SavedDate" },
                 values: new object[,]
                 {
-                    { new Guid("36165a94-1a9c-43dd-bf13-97a4e61e8b89"), "john.doe@example.com", "John", "Doe", "hashedpassword123", new DateTime(2024, 12, 27, 20, 38, 10, 742, DateTimeKind.Utc).AddTicks(8074) },
-                    { new Guid("6d3080d4-5dbf-4549-8ac1-77713785de2a"), "jane.smith@example.com", "Jane", "Smith", "hashedpassword456", new DateTime(2024, 12, 27, 20, 38, 10, 742, DateTimeKind.Utc).AddTicks(8100) }
+                    { new Guid("36165a94-1a9c-43dd-bf13-97a4e61e8b89"), "john.doe@example.com", "John", "Doe", "hashedpassword123", new DateTime(2025, 1, 3, 10, 17, 46, 263, DateTimeKind.Utc).AddTicks(5121) },
+                    { new Guid("6d3080d4-5dbf-4549-8ac1-77713785de2a"), "jane.smith@example.com", "Jane", "Smith", "hashedpassword456", new DateTime(2025, 1, 3, 10, 17, 46, 263, DateTimeKind.Utc).AddTicks(5129) }
                 });
 
             migrationBuilder.InsertData(
@@ -137,8 +138,8 @@ namespace Mirror.Application.Migrations
                 columns: new[] { "Id", "Description", "IsAchieved", "PercentageAchieved", "ProgressName", "SavedDate", "TrackedDays", "TrackingProgressDay", "Updated", "UserId" },
                 values: new object[,]
                 {
-                    { new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), "Training to Marathon", null, 47.0, "Time", new DateTime(2024, 12, 27, 20, 38, 10, 742, DateTimeKind.Utc).AddTicks(8316), 0.0, "Thursday", null, new Guid("6d3080d4-5dbf-4549-8ac1-77713785de2a") },
-                    { new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e"), "Cutting body fat", null, 63.0, "Weight", new DateTime(2024, 12, 27, 20, 38, 10, 742, DateTimeKind.Utc).AddTicks(8307), 0.0, "Tuesday", null, new Guid("36165a94-1a9c-43dd-bf13-97a4e61e8b89") }
+                    { new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), "Training to Marathon", null, 47.0, "Time", new DateTime(2025, 1, 3, 10, 17, 46, 263, DateTimeKind.Utc).AddTicks(5466), 0.0, "Thursday", null, new Guid("6d3080d4-5dbf-4549-8ac1-77713785de2a") },
+                    { new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e"), "Cutting body fat", null, 63.0, "Weight", new DateTime(2025, 1, 3, 10, 17, 46, 263, DateTimeKind.Utc).AddTicks(5458), 0.0, "Tuesday", null, new Guid("36165a94-1a9c-43dd-bf13-97a4e61e8b89") }
                 });
 
             migrationBuilder.InsertData(
@@ -146,13 +147,13 @@ namespace Mirror.Application.Migrations
                 columns: new[] { "Id", "ProgressColumnHead", "ProgressColumnValue", "ProgressDate_Day", "ProgressDate_Month", "ProgressDate_Year", "ProgressId", "SavedDate" },
                 values: new object[,]
                 {
-                    { new Guid("4ba3540b-08f3-4387-b945-7ba770a85e25"), "Time", "24:05", 15, 1, 2024, new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), new DateTime(2024, 12, 27, 20, 38, 10, 742, DateTimeKind.Utc).AddTicks(8388) },
-                    { new Guid("656b13cc-43f3-451a-9682-8febbea069a8"), "Weight", "71", 6, 8, 2024, new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e"), new DateTime(2024, 12, 27, 20, 38, 10, 742, DateTimeKind.Utc).AddTicks(8357) },
-                    { new Guid("8f83b08c-6e21-48d8-ae1b-dbab600427b5"), "Weight", "73", 12, 8, 2024, new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e"), new DateTime(2024, 12, 27, 20, 38, 10, 742, DateTimeKind.Utc).AddTicks(8368) },
-                    { new Guid("ab7939e4-73c2-43d5-b69c-3d8ccccb165e"), "Weight", "72", 10, 8, 2024, new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e"), new DateTime(2024, 12, 27, 20, 38, 10, 742, DateTimeKind.Utc).AddTicks(8364) },
-                    { new Guid("b40ca18e-b117-4a34-85df-598d9483546b"), "Time", "25:17", 5, 1, 2024, new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), new DateTime(2024, 12, 27, 20, 38, 10, 742, DateTimeKind.Utc).AddTicks(8372) },
-                    { new Guid("d215325e-645e-4ff7-8e16-7f52469c1679"), "Time", "26:18", 10, 1, 2024, new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), new DateTime(2024, 12, 27, 20, 38, 10, 742, DateTimeKind.Utc).AddTicks(8376) },
-                    { new Guid("fe2bd601-c60d-4392-8920-5eba1324b7fa"), "Time", "27:18", 20, 1, 2024, new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), new DateTime(2024, 12, 27, 20, 38, 10, 742, DateTimeKind.Utc).AddTicks(8392) }
+                    { new Guid("08a5c64b-bfd9-4568-aa0e-eb6b2d5eec04"), "Time", "24:05", 15, 1, 2024, new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), new DateTime(2025, 1, 3, 10, 17, 46, 263, DateTimeKind.Utc).AddTicks(5595) },
+                    { new Guid("3e385397-34bf-4514-9850-1e5a06af021a"), "Weight", "72", 10, 8, 2024, new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e"), new DateTime(2025, 1, 3, 10, 17, 46, 263, DateTimeKind.Utc).AddTicks(5579) },
+                    { new Guid("42ad7ebc-fea8-4528-9dd7-c62f9ea1aa82"), "Time", "27:18", 20, 1, 2024, new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), new DateTime(2025, 1, 3, 10, 17, 46, 263, DateTimeKind.Utc).AddTicks(5620) },
+                    { new Guid("b2c6722f-eee6-43a4-9aa9-169c6ec446bc"), "Weight", "71", 6, 8, 2024, new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e"), new DateTime(2025, 1, 3, 10, 17, 46, 263, DateTimeKind.Utc).AddTicks(5573) },
+                    { new Guid("c29c3ed5-4c24-4944-a0af-5aa643ec50c4"), "Time", "25:17", 5, 1, 2024, new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), new DateTime(2025, 1, 3, 10, 17, 46, 263, DateTimeKind.Utc).AddTicks(5587) },
+                    { new Guid("c7b59644-eae1-457e-bf70-085dff8e656b"), "Time", "26:18", 10, 1, 2024, new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), new DateTime(2025, 1, 3, 10, 17, 46, 263, DateTimeKind.Utc).AddTicks(5591) },
+                    { new Guid("f3bf7e9d-5199-4063-89b4-bb8d10797995"), "Weight", "73", 12, 8, 2024, new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e"), new DateTime(2025, 1, 3, 10, 17, 46, 263, DateTimeKind.Utc).AddTicks(5584) }
                 });
 
             migrationBuilder.CreateIndex(

@@ -7,8 +7,8 @@ namespace Mirror.Application.Services.FileService
     {
         public Task<Image> SaveFileToBlob(IFormFile file);
 
-        public Task<string> SaveFileToDisk(IFormFile file, Guid memoryId);
+        public Task DeleteMultipleFiles(List<Guid> imagesIds);
 
-        public Task<string?> ValidateAndSaveFile(IFormFile file, Guid memoryId);
+        public Task<int> SaveMultipleFilesToBlob(List<IFormFile> files);
     }
 }

@@ -4,6 +4,7 @@ using Mirror.Api.Filters;
 using Mirror.Application.Services.FileService;
 using Mirror.Application.Services.Repository.Memory;
 using Mirror.Contracts.Request.Memory.POST;
+using Mirror.Contracts.Request.Memory.PUT;
 using Mirror.Contracts.Response.Memory;
 using Mirror.Domain.Entities;
 
@@ -37,7 +38,7 @@ namespace Mirror.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateMemory([FromForm] UserMemoryCreateRequest request)
         {
-            _logger.LogInformation("Starting CreateMemory endpoint.");
+            _logger.LogInformation($"Starting {nameof(CreateMemory)} endpoint.");
 
             if (request is null)
             {
@@ -87,7 +88,7 @@ namespace Mirror.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetAllMemoriesById([FromRoute] Guid memoryId)
         {
-            _logger.LogInformation("Starting GetAllMemoriesById endpoint with ID {MemoryId}.", memoryId);
+            _logger.LogInformation($"Starting {nameof(GetAllMemoriesById)} endpoint with ID {memoryId}.");
 
             if (memoryId == Guid.Empty)
             {
@@ -107,6 +108,55 @@ namespace Mirror.Api.Controllers
             _logger.LogInformation("Memory retrieved successfully with ID {MemoryId}.", memoryId);
 
             return Ok(response);
+        }
+
+        [HttpPut("{memoryId}")]
+        public async Task<IActionResult> UpdateMemoryById([FromRoute] Guid memoryId, [FromForm] UserMemoryUpdateRequest request)
+        {
+            _logger.LogInformation($"Starting {nameof(UpdateMemoryById)} endpoint with ID {memoryId}.");
+
+            if (memoryId == Guid.Empty)
+            {
+                _logger.LogWarning("Invalid memory ID provided.");
+                return BadRequest("Memory ID cannot be empty.");
+            }
+
+            if (request == null)
+            {
+                _logger.LogWarning("Update memory request is null.");
+                return BadRequest("Request body cannot be null.");
+            }
+
+            _logger.LogInformation("Fetching existing memory with ID {MemoryId}.", memoryId);
+
+            var existingMemory = await _memoryRepository.GetMemoryById(memoryId);
+
+            if (existingMemory == null || existingMemory.Id == Guid.Empty)
+            {
+                _logger.LogWarning("Memory with ID {MemoryId} not found.", memoryId);
+                return NotFound($"Memory with ID {memoryId} not found.");
+            }
+
+            _logger.LogInformation("Mapping update request to memory entity.");
+            var updatedMemory = _mapper.Map<UserMemory>(request);
+
+            _logger.LogInformation("Updating memory with ID {MemoryId}.", memoryId);
+            var isUpdated = await _memoryRepository.UpdateMemory(existingMemory, updatedMemory);
+
+            if (request.ImagesToDelete.Count != 0)
+            {
+                await _fileService.DeleteMultipleFiles(request.ImagesToDelete);
+            }
+
+            if (!isUpdated)
+            {
+                _logger.LogError("Failed to update memory with ID {MemoryId}.", memoryId);
+                return BadRequest("Failed to update memory.");
+            }
+
+            _logger.LogInformation("Successfully updated memory with ID {MemoryId}.", memoryId);
+
+            return Ok(updatedMemory);
         }
     }
 }

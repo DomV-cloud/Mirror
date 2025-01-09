@@ -61,23 +61,23 @@ namespace Mirror.Infrastructure.Services.Repository.Progress
 
         public async Task<bool> UpdateProgress(Domain.Entities.Progress existingProgress, Domain.Entities.Progress newProgress)
         {
-            if (_context.Entry(existingProgress).State == EntityState.Detached)
+            if (existingProgress.Id == newProgress.Id)
             {
-                _context.Progresses.Attach(existingProgress);
-            }
-
-            // Nastavit stav na Modified, aby EF Core věděl, že se jedná o aktualizaci
-            _context.Entry(existingProgress).CurrentValues.SetValues(newProgress);
-            _context.Entry(existingProgress).State = EntityState.Modified;
-
-            // Zkontroluj, zda existují nějaké změny v entitě
-            var entry = _context.Entry(existingProgress);
-            if (entry.State == EntityState.Unchanged)
-            {
-                _logger.LogWarning($"No changes detected in {nameof(UpdateProgress)}.");
                 return false;
             }
 
+            existingProgress.ProgressName = newProgress.ProgressName;
+            existingProgress.Description = newProgress.Description;
+            existingProgress.Description = newProgress.Description;
+            existingProgress.ProgressValue = newProgress.ProgressValue;
+            existingProgress.IsAchieved = newProgress.IsAchieved;
+            existingProgress.TrackedDays = newProgress.TrackedDays;
+            existingProgress.TrackingProgressDay = newProgress.TrackingProgressDay;
+            existingProgress.PercentageAchieved = newProgress.PercentageAchieved;
+            existingProgress.Updated = newProgress.Updated;
+            UpdateProgressValues(existingProgress, newProgress.ProgressValue);
+
+            _context.Progresses.Update(existingProgress);
             int success = await _context.SaveChangesAsync();
 
             if (success == 0)
@@ -87,6 +87,19 @@ namespace Mirror.Infrastructure.Services.Repository.Progress
             }
 
             return true;
+        }
+
+        private void UpdateProgressValues(Domain.Entities.Progress existingProgress, List<Domain.Entities.ProgressValue> newProgressValues)
+        {
+            existingProgress.ProgressValue.RemoveAll(p => !newProgressValues.Any(newImg => newImg.Id == p.Id));
+
+            foreach (var newImage in newProgressValues)
+            {
+                if (!existingProgress.ProgressValue.Any(img => img.Id == newImage.Id))
+                {
+                    existingProgress.ProgressValue.Add(newImage);
+                }
+            }
         }
     }
 }

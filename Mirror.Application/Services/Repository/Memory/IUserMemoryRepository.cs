@@ -9,5 +9,7 @@ namespace Mirror.Application.Services.Repository.Memory
         public Task<List<UserMemory>> GetAllMemoryByUserId(Guid userId);
 
         public Task<UserMemory> GetMemoryById(Guid memoryId);
+
+        public Task<bool> UpdateMemory(UserMemory existingMemory, UserMemory memoryToUpdate);
     }
 }

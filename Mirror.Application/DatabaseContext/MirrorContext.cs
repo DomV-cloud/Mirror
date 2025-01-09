@@ -38,6 +38,12 @@ namespace Mirror.Application.DatabaseContext
                 .HasForeignKey(pv => pv.ProgressId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<UserMemory>()
+                .HasMany(um => um.Images)
+                .WithOne(img => img.UserMemory)
+                .HasForeignKey(img => img.UserMemoryId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             // Data seeding
             modelBuilder.Entity<User>().HasData(
                 new User

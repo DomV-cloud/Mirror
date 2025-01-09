@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Mirror.Application.DatabaseContext;
@@ -10,14 +9,27 @@ namespace Mirror.Application.Services.FileService
     public class FileService : IFileService
     {
         private readonly MirrorContext _context;
-        private readonly IMapper _mapper;
         private readonly ILogger<FileService> _logger;
 
-        public FileService(MirrorContext context, IMapper mapper, ILogger<FileService> logger)
+        public FileService(MirrorContext context, ILogger<FileService> logger)
         {
             _context = context;
-            _mapper = mapper;
             _logger = logger;
+        }
+
+        ///TODO: I would consider to split FileService to ImageService
+        public async Task DeleteMultipleFiles(List<Guid> imagesIds)
+        {
+            foreach (var image in imagesIds)
+            {
+                var imageToDelete = await _context.Images.FirstOrDefaultAsync(i => i.Id == image);
+
+                if (imageToDelete is not null)
+                {
+                    _context.Images.Remove(imageToDelete);
+                }
+            }
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Image> SaveFileToBlob(IFormFile file)
@@ -28,59 +40,32 @@ namespace Mirror.Application.Services.FileService
             await file.CopyToAsync(ms);
             var imageData = ms.ToArray();
 
-            var mappedImage = _mapper.Map<Image>(file);
-            mappedImage.Content = imageData;
+            var image = new Image
+            {
+                FileName = file.FileName,
+                ContentType = file.ContentType,
+                Content = ms.ToArray()
+            };
 
-            _context.Images.Add(mappedImage);
+            _context.Images.Add(image);
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("File {FileName} saved successfully to blob storage with ID {ImageId}", file.FileName, mappedImage.Id);
+            _logger.LogInformation("File {FileName} saved successfully to blob storage with ID {ImageId}", file.FileName, image.Id);
 
-            return mappedImage;
+            return image;
         }
 
-        public async Task<string> SaveFileToDisk(IFormFile file, Guid memoryId)
+        public async Task<int> SaveMultipleFilesToBlob(List<IFormFile> files)
         {
-            _logger.LogInformation("Saving file {FileName} to disk for memory {MemoryId}", file.FileName, memoryId);
+            List<IFormFile> newlyAddedFiles = [];
 
-            var memoryPath = Path.Combine("C:/mirror/memories", memoryId.ToString());
-
-            if (!Directory.Exists(memoryPath))
+            foreach (var file in files)
             {
-                Directory.CreateDirectory(memoryPath);
-                _logger.LogInformation("Created directory {DirectoryPath}", memoryPath);
+                await SaveFileToBlob(file);
+                newlyAddedFiles.Add(file);
             }
 
-            var filePath = Path.Combine(memoryPath, file.FileName);
-
-            using var stream = new FileStream(filePath, FileMode.Create);
-            await file.CopyToAsync(stream);
-
-            _logger.LogInformation("File {FileName} successfully saved to disk at {FilePath}", file.FileName, filePath);
-
-            return $"/mirror/memories/{memoryId}/{file.FileName}";
-        }
-
-        public async Task<string?> ValidateAndSaveFile(IFormFile file, Guid memoryId)
-        {
-            _logger.LogInformation("Validating file {FileName} for memory {MemoryId}", file.FileName, memoryId);
-
-            if (file.Length > 5 * 1024 * 1024)
-            {
-                _logger.LogWarning("Validation failed for file {FileName}. File size exceeds limit.", file.FileName);
-                throw new InvalidOperationException("File size exceeds limit.");
-            }
-
-            var validContentTypes = new[] { "image/jpeg", "image/png" };
-            if (!validContentTypes.Contains(file.ContentType))
-            {
-                _logger.LogWarning("Validation failed for file {FileName}. Invalid file type {ContentType}.", file.FileName, file.ContentType);
-                throw new InvalidOperationException("Invalid file type.");
-            }
-
-            _logger.LogInformation("File {FileName} passed validation. Saving to disk.", file.FileName);
-
-            return await SaveFileToDisk(file, memoryId);
+            return newlyAddedFiles.Count; //temp
         }
     }
 }

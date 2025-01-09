@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Mirror.Contracts.Request.Images;
 
 namespace Mirror.Contracts.Request.Memory.POST
 {
-    public record UserMemoryCreateRequest
+    public class UserMemoryCreateRequest
     {
         public Guid UserId { get; set; }
 
