@@ -82,7 +82,7 @@ namespace Mirror.Api.Controllers
 
             _logger.LogInformation("Fetching memories for user ID {UserId}.", userId);
 
-            var memories = await _memoryRepository.GetAllMemoryByUserId(userId);
+            var memories = await _memoryRepository.GetAllMemoryByUserIdAsync(userId);
 
             if (memories == null || memories.Count == 0)
             {

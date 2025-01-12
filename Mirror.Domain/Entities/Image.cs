@@ -12,10 +12,16 @@ namespace Mirror.Domain.Entities
         public string FileName { get; set; } = null!;
 
         /// <summary>
-        /// Binární data obrázku.
+        /// Url adress of the image.
         /// </summary>
         [JsonPropertyName("url")]
         public string? Url { get; set; }
+        
+        /// <summary>
+        /// Path of the image.
+        /// </summary>
+        [JsonPropertyName("filePath")]
+        public string? FilePath { get; set; }
 
         [JsonPropertyName("content")]
         public byte[] Content { get; set; } = [];

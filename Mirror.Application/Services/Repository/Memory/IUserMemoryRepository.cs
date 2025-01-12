@@ -4,12 +4,14 @@ namespace Mirror.Application.Services.Repository.Memory
 {
     public interface IUserMemoryRepository
     {
-        public Task<UserMemory> CreateMemory(UserMemory memoryToSave);
+        public Task<UserMemory> CreateMemoryAsync(UserMemory memoryToSave);
 
-        public Task<List<UserMemory>> GetAllMemoryByUserId(Guid userId);
+        public Task<List<UserMemory>> GetAllMemoryByUserIdAsync(Guid userId);
 
-        public Task<UserMemory> GetMemoryById(Guid memoryId);
+        public Task<UserMemory> GetMemoryByIdAsync(Guid memoryId);
 
-        public Task<bool> UpdateMemory(UserMemory existingMemory, UserMemory memoryToUpdate);
+        public Task<bool> UpdateMemoryAsync(UserMemory existingMemory, UserMemory memoryToUpdate);
+
+        public Task<bool> DeleteMemoryAsync(UserMemory memoryToDelete);
     }
 }

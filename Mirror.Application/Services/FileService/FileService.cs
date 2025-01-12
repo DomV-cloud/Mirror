@@ -1,71 +1,43 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Mirror.Application.DatabaseContext;
+using Mirror.Application.Services.FileService.FilePathGenerator;
 using Mirror.Domain.Entities;
 
 namespace Mirror.Application.Services.FileService
 {
     public class FileService : IFileService
     {
-        private readonly MirrorContext _context;
         private readonly ILogger<FileService> _logger;
+        private readonly IFilePathGenerator _filePathGenerator;
 
-        public FileService(MirrorContext context, ILogger<FileService> logger)
+        public FileService(ILogger<FileService> logger, IFilePathGenerator filePathGenerator)
         {
-            _context = context;
             _logger = logger;
+            _filePathGenerator = filePathGenerator;
         }
 
-        ///TODO: I would consider to split FileService to ImageService
-        public async Task DeleteMultipleFiles(List<Guid> imagesIds)
+        public Task DeleteFile(string filePath)
         {
-            foreach (var image in imagesIds)
-            {
-                var imageToDelete = await _context.Images.FirstOrDefaultAsync(i => i.Id == image);
-
-                if (imageToDelete is not null)
-                {
-                    _context.Images.Remove(imageToDelete);
-                }
-            }
-            await _context.SaveChangesAsync();
+            throw new NotImplementedException();
         }
 
-        public async Task<Image> SaveFileToBlob(IFormFile file)
+        public async Task<string> SaveFileToBlob(IFormFile file)
         {
             _logger.LogInformation("Saving file {FileName} to blob storage", file.FileName);
 
             using var ms = new MemoryStream();
             await file.CopyToAsync(ms);
-            var imageData = ms.ToArray();
+            var filePath = _filePathGenerator.GenerateFilePath(file.FileName);
 
-            var image = new Image
+            if (String.IsNullOrEmpty(filePath))
             {
-                FileName = file.FileName,
-                ContentType = file.ContentType,
-                Content = ms.ToArray()
-            };
-
-            _context.Images.Add(image);
-            await _context.SaveChangesAsync();
-
-            _logger.LogInformation("File {FileName} saved successfully to blob storage with ID {ImageId}", file.FileName, image.Id);
-
-            return image;
-        }
-
-        public async Task<int> SaveMultipleFilesToBlob(List<IFormFile> files)
-        {
-            List<IFormFile> newlyAddedFiles = [];
-
-            foreach (var file in files)
-            {
-                await SaveFileToBlob(file);
-                newlyAddedFiles.Add(file);
+                _logger.LogError("File {FileName} cannot save successfully with path is null or empty", file.FileName);
+                return "";
             }
+            _logger.LogInformation("File {FileName} saved successfully with path {FilePath}", file.FileName, filePath);
 
-            return newlyAddedFiles.Count; //temp
+            return filePath;
         }
     }
 }

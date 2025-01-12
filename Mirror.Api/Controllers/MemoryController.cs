@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Mirror.Api.Filters;
 using Mirror.Application.Services.FileService;
+using Mirror.Application.Services.Repository.Image;
 using Mirror.Application.Services.Repository.Memory;
 using Mirror.Contracts.Request.Memory.POST;
 using Mirror.Contracts.Request.Memory.PUT;
 using Mirror.Contracts.Response.Memory;
 using Mirror.Domain.Entities;
+using System;
 
 namespace Mirror.Api.Controllers
 {
@@ -17,15 +19,15 @@ namespace Mirror.Api.Controllers
     {
         private readonly ILogger<MemoryController> _logger;
         private readonly IUserMemoryRepository _memoryRepository;
+        private readonly IImageRepository _imageRepository;
         private readonly IMapper _mapper;
-        private readonly IFileService _fileService;
 
-        public MemoryController(ILogger<MemoryController> logger, IUserMemoryRepository memoryRepository, IMapper mapper, IFileService fileService)
+        public MemoryController(ILogger<MemoryController> logger, IUserMemoryRepository memoryRepository, IMapper mapper, IImageRepository imageRepository)
         {
             _logger = logger;
             _memoryRepository = memoryRepository;
             _mapper = mapper;
-            _fileService = fileService;
+            _imageRepository = imageRepository;
         }
 
         /// <summary>
@@ -53,7 +55,7 @@ namespace Mirror.Api.Controllers
                 {
                     if (formFile.Length > 0)
                     {
-                        var savedImage = await _fileService.SaveFileToBlob(formFile);
+                        var savedImage = await _imageRepository.CreateImageAsync(formFile);
                         images.Add(savedImage);
                         _logger.LogInformation("Image {ImageName} successfully uploaded.", formFile.FileName);
                     }
@@ -63,7 +65,7 @@ namespace Mirror.Api.Controllers
             var mappedMemory = _mapper.Map<UserMemory>(request);
             mappedMemory.Images = images;
 
-            var createdMemory = await _memoryRepository.CreateMemory(mappedMemory);
+            var createdMemory = await _memoryRepository.CreateMemoryAsync(mappedMemory);
 
             if (createdMemory is null)
             {
@@ -96,7 +98,7 @@ namespace Mirror.Api.Controllers
                 return BadRequest("Memory ID cannot be empty.");
             }
 
-            var memory = await _memoryRepository.GetMemoryById(memoryId);
+            var memory = await _memoryRepository.GetMemoryByIdAsync(memoryId);
 
             if (memory is null)
             {
@@ -129,7 +131,7 @@ namespace Mirror.Api.Controllers
 
             _logger.LogInformation("Fetching existing memory with ID {MemoryId}.", memoryId);
 
-            var existingMemory = await _memoryRepository.GetMemoryById(memoryId);
+            var existingMemory = await _memoryRepository.GetMemoryByIdAsync(memoryId);
 
             if (existingMemory == null || existingMemory.Id == Guid.Empty)
             {
@@ -141,11 +143,11 @@ namespace Mirror.Api.Controllers
             var updatedMemory = _mapper.Map<UserMemory>(request);
 
             _logger.LogInformation("Updating memory with ID {MemoryId}.", memoryId);
-            var isUpdated = await _memoryRepository.UpdateMemory(existingMemory, updatedMemory);
+            var isUpdated = await _memoryRepository.UpdateMemoryAsync(existingMemory, updatedMemory);
 
             if (request.ImagesToDelete.Count != 0)
             {
-                await _fileService.DeleteMultipleFiles(request.ImagesToDelete);
+                await _imageRepository.DeleteImageAsync(request.ImagesToDelete);
             }
 
             if (!isUpdated)
@@ -157,6 +159,34 @@ namespace Mirror.Api.Controllers
             _logger.LogInformation("Successfully updated memory with ID {MemoryId}.", memoryId);
 
             return Ok(updatedMemory);
+        }
+
+        [HttpDelete("{memoryId:guid}")]
+        public async Task<IActionResult> DeleteMemoryById([FromRoute] Guid memoryId)
+        {
+            if (memoryId == Guid.Empty)
+            {
+                _logger.LogWarning("Invalid memory ID provided.");
+                return BadRequest("Memory ID cannot be empty.");
+            }
+
+            var memoryToDelete = await _memoryRepository.GetMemoryByIdAsync(memoryId);
+
+            if (memoryToDelete is null)
+            {
+                _logger.LogWarning("Memory with ID {MemoryId} not found.", memoryId);
+                return NotFound($"Memory with ID {memoryId} not found.");
+            }
+
+            bool isDeleted = await _memoryRepository.DeleteMemoryAsync(memoryToDelete);
+
+            if (!isDeleted)
+            {
+                _logger.LogError("Failed to delete memory with ID {MemoryId}.", memoryId);
+                return BadRequest("Failed to delete memory.");
+            }
+
+            return Ok(isDeleted);
         }
     }
 }

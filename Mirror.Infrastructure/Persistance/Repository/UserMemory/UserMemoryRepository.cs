@@ -16,7 +16,7 @@ namespace Mirror.Infrastructure.Services.Repository.UserMemory
             _logger = logger;
         }
 
-        public async Task<Domain.Entities.UserMemory> CreateMemory(Domain.Entities.UserMemory memoryToSave)
+        public async Task<Domain.Entities.UserMemory> CreateMemoryAsync(Domain.Entities.UserMemory memoryToSave)
         {
             _logger.LogInformation("Attempting to create a new memory for user with ID: {UserId}", memoryToSave?.UserId);
 
@@ -34,7 +34,26 @@ namespace Mirror.Infrastructure.Services.Repository.UserMemory
             return memoryToSave;
         }
 
-        public async Task<List<Domain.Entities.UserMemory>> GetAllMemoryByUserId(Guid userId)
+        public async Task<bool> DeleteMemoryAsync(Domain.Entities.UserMemory memoryToDelete)
+        {
+            if (memoryToDelete is null)
+            {
+                return false;
+            }
+
+            _context.Memories.Remove(memoryToDelete);
+
+            int updatedRows = await _context.SaveChangesAsync();
+
+            if (updatedRows < 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<List<Domain.Entities.UserMemory>> GetAllMemoryByUserIdAsync(Guid userId)
         {
             _logger.LogInformation("Fetching all memories for user with ID: {UserId}", userId);
 
@@ -54,7 +73,7 @@ namespace Mirror.Infrastructure.Services.Repository.UserMemory
             return memories;
         }
 
-        public async Task<Domain.Entities.UserMemory> GetMemoryById(Guid memoryId)
+        public async Task<Domain.Entities.UserMemory> GetMemoryByIdAsync(Guid memoryId)
         {
             _logger.LogInformation("Fetching memory with ID: {MemoryId}", memoryId);
 
@@ -73,7 +92,7 @@ namespace Mirror.Infrastructure.Services.Repository.UserMemory
             return memory;
         }
 
-        public async Task<bool> UpdateMemory(Domain.Entities.UserMemory existingMemory, Domain.Entities.UserMemory newMemory)
+        public async Task<bool> UpdateMemoryAsync(Domain.Entities.UserMemory existingMemory, Domain.Entities.UserMemory newMemory)
         {
             if (existingMemory.Id == newMemory.Id)
             {
@@ -95,7 +114,7 @@ namespace Mirror.Infrastructure.Services.Repository.UserMemory
             var entry = _context.Entry(existingMemory);
             if (entry.State == EntityState.Unchanged)
             {
-                _logger.LogWarning($"No changes detected in {nameof(UpdateMemory)}.");
+                _logger.LogWarning($"No changes detected in {nameof(UpdateMemoryAsync)}.");
                 return false;
             }
 
@@ -103,7 +122,7 @@ namespace Mirror.Infrastructure.Services.Repository.UserMemory
 
             if (success == 0)
             {
-                _logger.LogWarning($"No changes in {nameof(UpdateMemory)} were saved to the database");
+                _logger.LogWarning($"No changes in {nameof(UpdateMemoryAsync)} were saved to the database");
                 return false;
             }
 
