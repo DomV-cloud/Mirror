@@ -36,6 +36,7 @@ namespace Mirror.Api.Controllers
         /// <param name="request">Request body containing memory details.</param>
         /// <returns>Created memory object.</returns>
         [HttpPost]
+        [Consumes("multipart/form-data")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserMemoryResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateMemory([FromForm] UserMemoryCreateRequest request)
@@ -55,7 +56,7 @@ namespace Mirror.Api.Controllers
                 {
                     if (formFile.Length > 0)
                     {
-                        var savedImage = await _imageRepository.CreateImageAsync(formFile);
+                        var savedImage = await _imageRepository.UploadImageAsync(formFile);
                         images.Add(savedImage);
                         _logger.LogInformation("Image {ImageName} successfully uploaded.", formFile.FileName);
                     }
@@ -137,6 +138,15 @@ namespace Mirror.Api.Controllers
             {
                 _logger.LogWarning("Memory with ID {MemoryId} not found.", memoryId);
                 return NotFound($"Memory with ID {memoryId} not found.");
+            }
+
+            if (request.NewImages.Count != 0)
+            {
+                foreach (var newImage in request.NewImages)
+                {
+                   var uploadedNewImage =  await _imageRepository.UploadImageAsync(newImage);
+                    existingMemory.Images.Add(uploadedNewImage);
+                }
             }
 
             _logger.LogInformation("Mapping update request to memory entity.");

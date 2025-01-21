@@ -104,11 +104,6 @@ namespace Mirror.Infrastructure.Services.Repository.UserMemory
             existingMemory.Reminder = newMemory.Reminder;
             existingMemory.MemoryName = newMemory.MemoryName;
 
-            if (newMemory.Images.Count != 0)
-            {
-                UpdateImages(existingMemory, newMemory.Images);
-            }
-
             _context.Memories.Update(existingMemory);
 
             var entry = _context.Entry(existingMemory);
@@ -129,7 +124,7 @@ namespace Mirror.Infrastructure.Services.Repository.UserMemory
             return true;
         }
 
-        // For now I would leave it, but It am considering if it is right to do it like that. 
+        // For now I would leave it, but I am considering if it is right to do it like that. 
         // Updating images is same in Progress, I would consider to create maybe service
         private void UpdateImages(Domain.Entities.UserMemory existingMemory, List<Domain.Entities.Image> newImages)
         {

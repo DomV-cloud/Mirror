@@ -9,9 +9,10 @@ namespace Mirror.Contracts.Request.Memory.POST
         public string MemoryName { get; set; } = null!;
         
         public string? Description { get; set; }
-       
-        public List<IFormFile>? Images { get; set; } = [];
-        
+
+        //public List<IFormFile>? Images { get; set; } = [];
+        public IFormFileCollection? Images { get; set; }
+
         public string Reminder { get; set; } = null!;
     }
 }

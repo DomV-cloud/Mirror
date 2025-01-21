@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Mirror.Application.DatabaseContext;
 using Mirror.Application.Services.FileService;
 using Mirror.Application.Services.Repository.Image;
+using System.IO;
 
 namespace Mirror.Infrastructure.Persistance.Repository.Image
 {
@@ -20,17 +21,22 @@ namespace Mirror.Infrastructure.Persistance.Repository.Image
             _fileService = fileService;
         }
 
-        public async Task<Domain.Entities.Image> CreateImageAsync(IFormFile file)
+        public async Task<Domain.Entities.Image> UploadImageAsync(IFormFile file)
         {
             _logger.LogInformation("Saving image {FileName}", file.FileName);
 
             var filePath = await _fileService.SaveFileToBlob(file);
 
+            using var ms = new MemoryStream();
+            await file.CopyToAsync(ms);
+            var imageContent = ms.ToArray();
+
             var imageToSave = new Domain.Entities.Image
             {
                 FileName = file.FileName,
                 ContentType = file.ContentType,
-                FilePath = filePath
+                FilePath = filePath,
+                Content = imageContent
             };
 
             _context.Images.Add(imageToSave);
