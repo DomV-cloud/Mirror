@@ -1,14 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Mirror.Api.Filters;
-using Mirror.Application.Services.FileService;
 using Mirror.Application.Services.Repository.Image;
 using Mirror.Application.Services.Repository.Memory;
 using Mirror.Contracts.Request.Memory.POST;
 using Mirror.Contracts.Request.Memory.PUT;
 using Mirror.Contracts.Response.Memory;
 using Mirror.Domain.Entities;
-using System;
 
 namespace Mirror.Api.Controllers
 {
@@ -39,6 +37,7 @@ namespace Mirror.Api.Controllers
         [Consumes("multipart/form-data")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserMemoryResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateMemory([FromForm] UserMemoryCreateRequest request)
         {
             _logger.LogInformation($"Starting {nameof(CreateMemory)} endpoint.");
@@ -57,6 +56,12 @@ namespace Mirror.Api.Controllers
                     if (formFile.Length > 0)
                     {
                         var savedImage = await _imageRepository.UploadImageAsync(formFile);
+                        if (savedImage is null)
+                        {
+                            _logger.LogError("Failed to upload image {ImageName}.", formFile.FileName);
+                            return StatusCode(StatusCodes.Status500InternalServerError, $"Failed to upload image: {formFile.FileName}");
+                        }
+
                         images.Add(savedImage);
                         _logger.LogInformation("Image {ImageName} successfully uploaded.", formFile.FileName);
                     }
@@ -144,7 +149,7 @@ namespace Mirror.Api.Controllers
             {
                 foreach (var newImage in request.NewImages)
                 {
-                   var uploadedNewImage =  await _imageRepository.UploadImageAsync(newImage);
+                    var uploadedNewImage = await _imageRepository.UploadImageAsync(newImage);
                     existingMemory.Images.Add(uploadedNewImage);
                 }
             }
@@ -155,7 +160,7 @@ namespace Mirror.Api.Controllers
             _logger.LogInformation("Updating memory with ID {MemoryId}.", memoryId);
             var isUpdated = await _memoryRepository.UpdateMemoryAsync(existingMemory, updatedMemory);
 
-            if (request.ImagesToDelete.Count != 0)
+            if (request.ImagesToDelete.Count != 0 && request.ImagesToDelete != null)
             {
                 await _imageRepository.DeleteImageAsync(request.ImagesToDelete);
             }

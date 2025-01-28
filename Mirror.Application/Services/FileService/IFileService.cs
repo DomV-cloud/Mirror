@@ -5,7 +5,7 @@ namespace Mirror.Application.Services.FileService
 {
     public interface IFileService
     {
-        Task<string> SaveFileToBlob(IFormFile file);
+        string SaveFileToBlob(IFormFile file);
         Task DeleteFile(string filePath);
     }
 }

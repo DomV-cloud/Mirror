@@ -25,7 +25,7 @@ namespace Mirror.Infrastructure.Persistance.Repository.Image
         {
             _logger.LogInformation("Saving image {FileName}", file.FileName);
 
-            var filePath = await _fileService.SaveFileToBlob(file);
+            var filePath =  _fileService.SaveFileToBlob(file);
 
             using var ms = new MemoryStream();
             await file.CopyToAsync(ms);

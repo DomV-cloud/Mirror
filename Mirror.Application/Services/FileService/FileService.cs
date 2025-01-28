@@ -22,12 +22,10 @@ namespace Mirror.Application.Services.FileService
             throw new NotImplementedException();
         }
 
-        public async Task<string> SaveFileToBlob(IFormFile file)
+        public string SaveFileToBlob(IFormFile file)
         {
             _logger.LogInformation("Saving file {FileName} to blob storage", file.FileName);
 
-            using var ms = new MemoryStream();
-            await file.CopyToAsync(ms);
             var filePath = _filePathGenerator.GenerateFilePath(file.FileName);
 
             if (String.IsNullOrEmpty(filePath))

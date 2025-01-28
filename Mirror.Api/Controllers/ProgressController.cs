@@ -118,7 +118,7 @@ namespace Mirror.Api.Controllers
 
             if (request.image?.Length > 0)
             {
-                await _fileUploadService.SaveFileToBlob(request.image);
+                 _fileUploadService.SaveFileToBlob(request.image);
                 _logger.LogInformation("File {FileName} uploaded successfully.", request.image.Name);
             }
 

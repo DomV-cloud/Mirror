@@ -123,7 +123,7 @@
 //            var progressId = Guid.NewGuid();
 
 //            var mockedProgress = FakeProgress.GetProgressFaker(
-//                progressValueCount: 5, 
+//                progressValueCount: 5,
 //                progressName: "Test Progress",
 //                id: progressId
 //                ).Generate();
