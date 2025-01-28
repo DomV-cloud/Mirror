@@ -24,4 +24,8 @@
     <ProjectReference Include="..\Mirror.Domain\Mirror.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Request\Images\PUT\" />
+  </ItemGroup>
+
 </Project>

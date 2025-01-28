@@ -1,11 +1,44 @@
-﻿namespace Mirror.Domain.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+
+namespace Mirror.Domain.Entities
 {
     public class Image : BaseEntity
     {
-        public string Name { get; set; } = null!;
+        /// <summary>
+        /// Name of the image
+        /// </summary>
+        [JsonPropertyName("imageName")]
+        public string FileName { get; set; } = null!;
 
-        public byte[] Data { get; set; } = null!;
+        /// <summary>
+        /// Url adress of the image.
+        /// </summary>
+        [JsonPropertyName("url")]
+        public string? Url { get; set; }
+        
+        /// <summary>
+        /// Path of the image.
+        /// </summary>
+        [JsonPropertyName("filePath")]
+        public string? FilePath { get; set; }
 
+        [JsonPropertyName("content")]
+        public byte[] Content { get; set; } = [];
+
+        /// <summary>
+        /// Content type of the image
+        /// </summary>
+        [JsonPropertyName("imageContentType")]
         public string ContentType { get; set; } = null!;
+
+        /// <summary>
+        /// Id of the user's memory
+        /// </summary>
+        [JsonPropertyName("memoryId")]
+        [ForeignKey(nameof(UserMemory))]
+        public Guid? UserMemoryId { get; set; }
+        
+        public UserMemory? UserMemory { get; set; }
     }
 }

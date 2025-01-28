@@ -8,26 +8,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Mirror.Application.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Images",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Data = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    ContentType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SavedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Images", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
@@ -42,6 +27,28 @@ namespace Mirror.Application.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Memories",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MemoryName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Reminder = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SavedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Memories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Memories_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -66,6 +73,30 @@ namespace Mirror.Application.Migrations
                         name: "FK_Progresses_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Images",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Content = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    ContentType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserMemoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    SavedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Images", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Images_Memories_UserMemoryId",
+                        column: x => x.UserMemoryId,
+                        principalTable: "Memories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -99,8 +130,8 @@ namespace Mirror.Application.Migrations
                 columns: new[] { "Id", "Email", "FirstName", "LastName", "Password", "SavedDate" },
                 values: new object[,]
                 {
-                    { new Guid("36165a94-1a9c-43dd-bf13-97a4e61e8b89"), "john.doe@example.com", "John", "Doe", "hashedpassword123", new DateTime(2024, 12, 24, 11, 53, 17, 636, DateTimeKind.Utc).AddTicks(4386) },
-                    { new Guid("6d3080d4-5dbf-4549-8ac1-77713785de2a"), "jane.smith@example.com", "Jane", "Smith", "hashedpassword456", new DateTime(2024, 12, 24, 11, 53, 17, 636, DateTimeKind.Utc).AddTicks(4395) }
+                    { new Guid("36165a94-1a9c-43dd-bf13-97a4e61e8b89"), "john.doe@example.com", "John", "Doe", "hashedpassword123", new DateTime(2025, 1, 15, 8, 4, 0, 714, DateTimeKind.Utc).AddTicks(2320) },
+                    { new Guid("6d3080d4-5dbf-4549-8ac1-77713785de2a"), "jane.smith@example.com", "Jane", "Smith", "hashedpassword456", new DateTime(2025, 1, 15, 8, 4, 0, 714, DateTimeKind.Utc).AddTicks(2325) }
                 });
 
             migrationBuilder.InsertData(
@@ -108,8 +139,8 @@ namespace Mirror.Application.Migrations
                 columns: new[] { "Id", "Description", "IsAchieved", "PercentageAchieved", "ProgressName", "SavedDate", "TrackedDays", "TrackingProgressDay", "Updated", "UserId" },
                 values: new object[,]
                 {
-                    { new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), "Training to Marathon", null, 47.0, "Time", new DateTime(2024, 12, 24, 11, 53, 17, 636, DateTimeKind.Utc).AddTicks(4644), 0.0, "Thursday", null, new Guid("6d3080d4-5dbf-4549-8ac1-77713785de2a") },
-                    { new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e"), "Cutting body fat", null, 63.0, "Weight", new DateTime(2024, 12, 24, 11, 53, 17, 636, DateTimeKind.Utc).AddTicks(4635), 0.0, "Tuesday", null, new Guid("36165a94-1a9c-43dd-bf13-97a4e61e8b89") }
+                    { new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), "Training to Marathon", null, 47.0, "Time", new DateTime(2025, 1, 15, 8, 4, 0, 714, DateTimeKind.Utc).AddTicks(2540), 0.0, "Thursday", null, new Guid("6d3080d4-5dbf-4549-8ac1-77713785de2a") },
+                    { new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e"), "Cutting body fat", null, 63.0, "Weight", new DateTime(2025, 1, 15, 8, 4, 0, 714, DateTimeKind.Utc).AddTicks(2536), 0.0, "Tuesday", null, new Guid("36165a94-1a9c-43dd-bf13-97a4e61e8b89") }
                 });
 
             migrationBuilder.InsertData(
@@ -117,14 +148,24 @@ namespace Mirror.Application.Migrations
                 columns: new[] { "Id", "ProgressColumnHead", "ProgressColumnValue", "ProgressDate_Day", "ProgressDate_Month", "ProgressDate_Year", "ProgressId", "SavedDate" },
                 values: new object[,]
                 {
-                    { new Guid("027f34b1-dbf7-488f-85d8-92461e926581"), "Time", "25:17", 5, 1, 2024, new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), new DateTime(2024, 12, 24, 11, 53, 17, 636, DateTimeKind.Utc).AddTicks(4724) },
-                    { new Guid("3581ae63-2216-4b05-9ebe-4ba47544881e"), "Time", "24:05", 15, 1, 2024, new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), new DateTime(2024, 12, 24, 11, 53, 17, 636, DateTimeKind.Utc).AddTicks(4732) },
-                    { new Guid("3cb7d356-463e-4364-bd99-935ae95ccba8"), "Time", "27:18", 20, 1, 2024, new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), new DateTime(2024, 12, 24, 11, 53, 17, 636, DateTimeKind.Utc).AddTicks(4736) },
-                    { new Guid("45e2bfa7-40f9-4e83-9daa-0b06616e0816"), "Weight", "72", 10, 8, 2024, new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e"), new DateTime(2024, 12, 24, 11, 53, 17, 636, DateTimeKind.Utc).AddTicks(4697) },
-                    { new Guid("dd68daf0-6337-4627-901f-1972bf8dfcc3"), "Weight", "73", 12, 8, 2024, new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e"), new DateTime(2024, 12, 24, 11, 53, 17, 636, DateTimeKind.Utc).AddTicks(4702) },
-                    { new Guid("e335f539-b442-4d95-9c30-fef9ca436c4e"), "Time", "26:18", 10, 1, 2024, new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), new DateTime(2024, 12, 24, 11, 53, 17, 636, DateTimeKind.Utc).AddTicks(4728) },
-                    { new Guid("e55d5f7a-6039-4345-b9f2-3087baf65333"), "Weight", "71", 6, 8, 2024, new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e"), new DateTime(2024, 12, 24, 11, 53, 17, 636, DateTimeKind.Utc).AddTicks(4690) }
+                    { new Guid("4da77058-3d8b-4d15-a5e5-c1d1e1702bc8"), "Time", "26:18", 10, 1, 2024, new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), new DateTime(2025, 1, 15, 8, 4, 0, 714, DateTimeKind.Utc).AddTicks(2628) },
+                    { new Guid("5eb36d5d-8b3f-4b6c-a954-63acd99fcd2e"), "Time", "27:18", 20, 1, 2024, new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), new DateTime(2025, 1, 15, 8, 4, 0, 714, DateTimeKind.Utc).AddTicks(2633) },
+                    { new Guid("77e27319-1af3-480e-9be7-5e2a91c0a08a"), "Time", "24:05", 15, 1, 2024, new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), new DateTime(2025, 1, 15, 8, 4, 0, 714, DateTimeKind.Utc).AddTicks(2631) },
+                    { new Guid("7a187b0a-3923-4695-b8ba-5efcce47b3a5"), "Weight", "71", 6, 8, 2024, new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e"), new DateTime(2025, 1, 15, 8, 4, 0, 714, DateTimeKind.Utc).AddTicks(2603) },
+                    { new Guid("bdc767e0-5c37-4fec-b329-5ebdb4a6f0d6"), "Weight", "72", 10, 8, 2024, new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e"), new DateTime(2025, 1, 15, 8, 4, 0, 714, DateTimeKind.Utc).AddTicks(2609) },
+                    { new Guid("cc6dd554-fd33-47df-8de5-9c288fb696a8"), "Time", "25:17", 5, 1, 2024, new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"), new DateTime(2025, 1, 15, 8, 4, 0, 714, DateTimeKind.Utc).AddTicks(2626) },
+                    { new Guid("f0dde803-62d3-450f-a7cc-b060159c4194"), "Weight", "73", 12, 8, 2024, new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e"), new DateTime(2025, 1, 15, 8, 4, 0, 714, DateTimeKind.Utc).AddTicks(2623) }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Images_UserMemoryId",
+                table: "Images",
+                column: "UserMemoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Memories_UserId",
+                table: "Memories",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Progresses_UserId",
@@ -145,6 +186,9 @@ namespace Mirror.Application.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProgressValues");
+
+            migrationBuilder.DropTable(
+                name: "Memories");
 
             migrationBuilder.DropTable(
                 name: "Progresses");

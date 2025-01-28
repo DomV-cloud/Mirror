@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mirror.Domain.Entities;
 using Mirror.Domain.Enums.Progress;
+using Mirror.Domain.Enums.UserMemory;
 
 namespace Mirror.Application.DatabaseContext
 {
@@ -17,6 +18,7 @@ namespace Mirror.Application.DatabaseContext
         public DbSet<Progress> Progresses => Set<Progress>();
         public DbSet<ProgressValue> ProgressValues => Set<ProgressValue>();
         public DbSet<Image> Images => Set<Image>();
+        public DbSet<UserMemory> Memories => Set<UserMemory>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -26,10 +28,20 @@ namespace Mirror.Application.DatabaseContext
             .Property(e => e.TrackingProgressDay)
             .HasConversion(new EnumToStringConverter<TrackingProgressDays>());
 
+            modelBuilder.Entity<UserMemory>()
+            .Property(e => e.Reminder)
+            .HasConversion(new EnumToStringConverter<Reminder>());
+
             modelBuilder.Entity<Progress>()
                 .HasMany(p => p.ProgressValue)
                 .WithOne(pv => pv.Progress)
                 .HasForeignKey(pv => pv.ProgressId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserMemory>()
+                .HasMany(um => um.Images)
+                .WithOne(img => img.UserMemory)
+                .HasForeignKey(img => img.UserMemoryId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Data seeding
