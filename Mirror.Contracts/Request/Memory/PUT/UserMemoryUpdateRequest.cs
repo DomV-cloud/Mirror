@@ -11,7 +11,7 @@ namespace Mirror.Contracts.Request.Memory.PUT
 
         public string? Description { get; set; }
 
-        public IFormFileCollection? NewImages { get; set; }
+        public List<IFormFile>? NewImages { get; set; } = [];
 
         public List<Guid>? ImagesToDelete { get; set; } = [];
 
