@@ -5,6 +5,7 @@ using Mirror.Application.Services.Repository.Memory;
 using Mirror.Application.Services.Repository.Progresses;
 using Mirror.Contracts.Response.Memory;
 using Mirror.Contracts.Response.Progress;
+using Mirror.Contracts.Response.Section;
 
 namespace Mirror.Api.Controllers
 {
@@ -59,6 +60,39 @@ namespace Mirror.Api.Controllers
 
             var response = _mapper.Map<List<ProgressResponse>>(progressesByUser);
             _logger.LogInformation("Successfully fetched {Count} progresses for user ID {UserId}.", response.Count, userId);
+
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Retrieves all progresses associated with a specific user.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        [HttpGet("{userId:guid}/progresses/active")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ProgressResponse>))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetActiveProgressByUserId([FromRoute] Guid userId)
+        {
+            if (userId == Guid.Empty)
+            {
+                _logger.LogWarning("Invalid user ID provided for progresses.");
+                return BadRequest("User ID cannot be empty.");
+            }
+
+            _logger.LogInformation("Fetching progresses for user ID {UserId}.", userId);
+
+            var progressesByUser = await _progressRepository.GetActiveProgressByUserAsync(userId);
+
+            if (progressesByUser == null)
+            {
+                _logger.LogInformation("No progresses found for user ID {UserId}.", userId);
+                return NoContent();
+            }
+
+            var response = _mapper.Map<ProgressResponse>(progressesByUser);
+            _logger.LogInformation("Successfully fetched progresses for user ID {UserId}.", userId);
 
             return Ok(response);
         }

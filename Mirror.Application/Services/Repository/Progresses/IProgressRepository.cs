@@ -11,6 +11,8 @@ namespace Mirror.Application.Services.Repository.Progresses
 
         public Task<Progress> CreateProgressAsync(Progress progress);
 
-        public Task<bool> UpdateProgress(Progress existinProgress, Progress progressToUpdate);
+        public Task<bool> UpdateProgressAsync(Progress existinProgress, Progress progressToUpdate);
+
+        public Task<Progress> GetActiveProgressByUserAsync(Guid userId);
     }
 }

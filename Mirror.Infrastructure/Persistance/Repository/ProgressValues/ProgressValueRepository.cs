@@ -22,7 +22,7 @@ namespace Mirror.Infrastructure.Services.Repository.ProgressValues
 
             var progressValues = await _context.ProgressValues
                 .AsNoTracking()
-                .Where(pv => pv.ProgressId == progressId)
+                //.Where(pv => pv.ProgressId == progressId)
                 .ToListAsync();
 
             if (!progressValues.Any())

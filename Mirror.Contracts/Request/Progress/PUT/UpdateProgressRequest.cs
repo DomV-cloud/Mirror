@@ -29,6 +29,6 @@ namespace Mirror.Contracts.Request.Progress.PUT
         /// Collection of progress values representing tracked data points for the metric.
         /// </summary>
         [JsonPropertyName("progressValues")]
-        public Dictionary<string, List<ProgressValueDTO>>? ProgressValues { get; set; } = [];
+        public Dictionary<string, List<ProgressValueResponse>>? ProgressValues { get; set; } = [];
     }
 }

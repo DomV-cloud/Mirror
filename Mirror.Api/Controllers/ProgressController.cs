@@ -164,7 +164,7 @@ namespace Mirror.Api.Controllers
             var updatedProgress = _mapper.Map<Progress>(request);
 
             _logger.LogInformation("Updating progress with ID {ProgressId}.", progressId);
-            var isProgressUpdated = await _progressRepository.UpdateProgress(existingProgress, updatedProgress);
+            var isProgressUpdated = await _progressRepository.UpdateProgressAsync(existingProgress, updatedProgress);
 
             if (!isProgressUpdated)
             {

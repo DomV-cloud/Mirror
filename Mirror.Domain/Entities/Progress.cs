@@ -36,8 +36,8 @@ namespace Mirror.Domain.Entities
         /// <summary>
         /// Collection of progress values representing tracked data points for the metric.
         /// </summary>
-        [JsonPropertyName("progressValues")]
-        public List<ProgressValue> ProgressValue { get; set; } = [];
+        [JsonPropertyName("sections")]
+        public List<ProgressSection> Sections { get; set; } = [];
 
         /// <summary>
         /// Shows if the user already achieved the progress
@@ -68,5 +68,11 @@ namespace Mirror.Domain.Entities
         /// </summary>
         [JsonPropertyName("updated")]
         public DateTime? Updated { get; set; }
+
+        /// <summary>
+        /// Set whenever is progress active or not
+        /// </summary>
+        [JsonPropertyName("isActive")]
+        public bool IsActive { get; set; } = false;
     }
 }

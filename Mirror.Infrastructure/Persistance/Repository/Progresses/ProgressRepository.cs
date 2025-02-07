@@ -20,11 +20,29 @@ namespace Mirror.Infrastructure.Services.Repository.Progress
             return progress;
         }
 
+        public async Task<Domain.Entities.Progress> GetActiveProgressByUserAsync(Guid userId)
+        {
+            var activeProgress = await _context.Progresses
+                .AsNoTracking() 
+                .AsSplitQuery() //.AsSplitQuery() I would considering, if in this case is good to use. 
+                .Where(p => p.UserId == userId)
+                .Include(p => p.Sections)
+                .ThenInclude(p => p.ProgressValues)
+                .FirstOrDefaultAsync(p => p.IsActive);
+
+            if (activeProgress == null)
+            {
+                return new();
+            }
+
+            return activeProgress;
+        }
+
         public async Task<List<Mirror.Domain.Entities.Progress>> GetProgressesAsync()
         {
             var progresses = await _context.Progresses
                 .AsNoTracking()
-                .Include(p => p.ProgressValue)
+                //.Include(p => p.ProgressValue)
                 .ToListAsync();
 
             if (progresses is null)
@@ -39,10 +57,10 @@ namespace Mirror.Infrastructure.Services.Repository.Progress
         {
             var retrievedProgress = await _context.Progresses
                 .AsNoTracking()
-                .Include(p => p.ProgressValue)
+                //.Include(p => p.ProgressValue)
                 .FirstOrDefaultAsync(p => p.Id == progressId);
 
-            if (retrievedProgress is null || retrievedProgress.ProgressValue.Count == 0)
+            if (retrievedProgress is null /*|| retrievedProgress.ProgressValue.Count == 0*/)
             {
                 return new();
             }
@@ -55,11 +73,12 @@ namespace Mirror.Infrastructure.Services.Repository.Progress
             return await _context.Progresses
                 .AsNoTracking()
                 .Where(p => p.UserId == userId)
-                .Include(p => p.ProgressValue)
+                //.Include(p => p.ProgressValue)
+                .OrderByDescending(p => p.IsActive)
                 .ToListAsync();
         }
 
-        public async Task<bool> UpdateProgress(Domain.Entities.Progress existingProgress, Domain.Entities.Progress newProgress)
+        public async Task<bool> UpdateProgressAsync(Domain.Entities.Progress existingProgress, Domain.Entities.Progress newProgress)
         {
             if (existingProgress.Id == newProgress.Id)
             {
@@ -68,38 +87,43 @@ namespace Mirror.Infrastructure.Services.Repository.Progress
 
             existingProgress.ProgressName = newProgress.ProgressName;
             existingProgress.Description = newProgress.Description;
-            existingProgress.Description = newProgress.Description;
-            existingProgress.ProgressValue = newProgress.ProgressValue;
+            existingProgress.IsActive = newProgress.IsActive;
+            //existingProgress.ProgressValue = newProgress.ProgressValue;
             existingProgress.IsAchieved = newProgress.IsAchieved;
             existingProgress.TrackedDays = newProgress.TrackedDays;
             existingProgress.TrackingProgressDay = newProgress.TrackingProgressDay;
             existingProgress.PercentageAchieved = newProgress.PercentageAchieved;
             existingProgress.Updated = newProgress.Updated;
-            UpdateProgressValues(existingProgress, newProgress.ProgressValue);
+
+            //if (newProgress.ProgressValue == null || newProgress.ProgressValue.Count == 0)
+            //{
+            //    _logger.LogInformation("Removing associated ProgressValues as ProgressColumnHead is empty.");
+
+            //    var relatedProgressValues = await _context.ProgressValues
+            //        .Where(pv => pv.ProgressId == existingProgress.Id)
+            //        .ToListAsync();
+
+            //    _context.ProgressValues.RemoveRange(relatedProgressValues);
+            //}
 
             _context.Progresses.Update(existingProgress);
+
+            var entry = _context.Entry(existingProgress);
+            if (entry.State == EntityState.Unchanged)
+            {
+                _logger.LogWarning($"No changes detected in {nameof(UpdateProgressAsync)}.");
+                return false;
+            }
+
             int success = await _context.SaveChangesAsync();
 
             if (success == 0)
             {
-                _logger.LogWarning($"No changes in {nameof(UpdateProgress)} were saved to the database");
+                _logger.LogWarning($"No changes in {nameof(UpdateProgressAsync)} were saved to the database");
                 return false;
             }
 
             return true;
-        }
-
-        private void UpdateProgressValues(Domain.Entities.Progress existingProgress, List<Domain.Entities.ProgressValue> newProgressValues)
-        {
-            existingProgress.ProgressValue.RemoveAll(p => !newProgressValues.Any(newImg => newImg.Id == p.Id));
-
-            foreach (var newImage in newProgressValues)
-            {
-                if (!existingProgress.ProgressValue.Any(img => img.Id == newImage.Id))
-                {
-                    existingProgress.ProgressValue.Add(newImage);
-                }
-            }
         }
     }
 }
