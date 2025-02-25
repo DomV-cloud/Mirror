@@ -1,6 +1,6 @@
 ﻿using Bogus;
 using Microsoft.AspNetCore.Http;
-using Mirror.Contracts.Request.Images.GET;
+using Mirror.Contracts.Response.Image;
 
 namespace Tests.MockData.Image
 {

@@ -1,7 +1,7 @@
 ﻿using Mirror.Contracts.Request.Progress.POST;
 using Mirror.Contracts.Request.Progress.PUT;
-using Mirror.Contracts.Request.ProgressValue;
 using Mirror.Contracts.Response.Progress;
+using Mirror.Contracts.Response.ProgressValue;
 using Mirror.Infrastructure.Mapper.Common;
 
 namespace Mirror.Infrastructure.Mapper.Progress
@@ -19,7 +19,8 @@ namespace Mirror.Infrastructure.Mapper.Progress
             CreateMap<ProgressValueResponse, Mirror.Domain.Entities.ProgressValue>();
 
             CreateMap<UpdateProgressRequest, Mirror.Domain.Entities.Progress>()
-            .ForMember(dest => dest.Id, opt => opt.Ignore());
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.Sections, opt => opt.MapFrom(src => src.NewSections));
         }
     }
 }

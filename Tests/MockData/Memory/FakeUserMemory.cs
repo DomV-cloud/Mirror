@@ -1,7 +1,7 @@
 ﻿using Bogus;
-using Mirror.Contracts.Request.Images.GET;
 using Mirror.Contracts.Request.Memory.POST;
 using Mirror.Contracts.Request.Memory.PUT;
+using Mirror.Contracts.Response.Image;
 using Mirror.Contracts.Response.Memory;
 using Mirror.Domain.Entities;
 using Mirror.Domain.Enums.UserMemory;
@@ -32,7 +32,6 @@ namespace Tests.MockData.Memory
         .RuleFor(x => x.Description, f => f.Lorem.Paragraph())
         .RuleFor(x => x.NewImages, f => FakeImage.GenerateMockImages(f.Random.Number(1, 5)))
         .RuleFor(x => x.ImagesToDelete, f => imagesToDelete ?? null)
-        .RuleFor(x => x.ExistingImageIds, f => existingImages ?? null)
         .RuleFor(x => x.Reminder, f => f.PickRandom(new[] { "Daily", "Weekly", "Monthly", "Yearly" }));
         }
 

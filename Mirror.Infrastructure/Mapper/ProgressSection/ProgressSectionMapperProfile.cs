@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Mirror.Contracts.Request.ProgressValue;
+using Mirror.Contracts.Response.ProgressValue;
 using Mirror.Contracts.Response.Section;
 using Mirror.Domain.Entities;
 

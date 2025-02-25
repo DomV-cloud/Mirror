@@ -1,8 +1,5 @@
-﻿using Mirror.Domain.Entities;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using Mirror.Contracts.Response.Section;
 using System.Text.Json.Serialization;
-using Mirror.Contracts.Request.ProgressValue;
 
 namespace Mirror.Contracts.Request.Progress.PUT
 {
@@ -28,7 +25,13 @@ namespace Mirror.Contracts.Request.Progress.PUT
         /// <summary>
         /// Collection of progress values representing tracked data points for the metric.
         /// </summary>
-        [JsonPropertyName("progressValues")]
-        public Dictionary<string, List<ProgressValueResponse>>? ProgressValues { get; set; } = [];
+        [JsonPropertyName("sections")]
+        public List<Domain.Entities.ProgressSection>? NewSections { get; set; } = [];
+
+        /// <summary>
+        /// Collection of progress values representing tracked data points for the metric.
+        /// </summary>
+        [JsonPropertyName("sectionsToDelete")]
+        public List<Guid>? SectionsToDelete { get; set; } = [];
     }
 }

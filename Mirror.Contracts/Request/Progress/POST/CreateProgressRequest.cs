@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Mirror.Contracts.Request.ProgressValue;
+using Mirror.Contracts.Request.ProgressSection.POST;
 
 namespace Mirror.Contracts.Request.Progress.POST
 {
     public record CreateProgressRequest(
         string ProgressName,
-        List<ProgressValueResponse>? ProgressValue,
+        List<CreateProgressSectionRequest>? Sections,
         Guid UserId,
         bool? IsAchieved,
         bool? IsActive,
@@ -13,6 +13,6 @@ namespace Mirror.Contracts.Request.Progress.POST
         string? TrackingProgressDays,
         double? PercentageAchieved,
         DateTime? Updated,
-        IFormFile? image
+        IFormFile? Image
         );
 }

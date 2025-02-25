@@ -42,7 +42,9 @@ namespace Mirror.Infrastructure.Services.Repository.Progress
         {
             var progresses = await _context.Progresses
                 .AsNoTracking()
-                //.Include(p => p.ProgressValue)
+                .AsSplitQuery()
+                .Include(p => p.Sections)
+                .ThenInclude(p => p.ProgressValues)
                 .ToListAsync();
 
             if (progresses is null)
@@ -57,10 +59,12 @@ namespace Mirror.Infrastructure.Services.Repository.Progress
         {
             var retrievedProgress = await _context.Progresses
                 .AsNoTracking()
-                //.Include(p => p.ProgressValue)
+                .AsSplitQuery()
+                .Include(p => p.Sections)
+                .ThenInclude(p => p.ProgressValues)
                 .FirstOrDefaultAsync(p => p.Id == progressId);
 
-            if (retrievedProgress is null /*|| retrievedProgress.ProgressValue.Count == 0*/)
+            if (retrievedProgress is null)
             {
                 return new();
             }
@@ -72,8 +76,10 @@ namespace Mirror.Infrastructure.Services.Repository.Progress
         {
             return await _context.Progresses
                 .AsNoTracking()
+                .AsSplitQuery()
                 .Where(p => p.UserId == userId)
-                //.Include(p => p.ProgressValue)
+                .Include(p => p.Sections)
+                .ThenInclude(p => p.ProgressValues)
                 .OrderByDescending(p => p.IsActive)
                 .ToListAsync();
         }
@@ -88,23 +94,12 @@ namespace Mirror.Infrastructure.Services.Repository.Progress
             existingProgress.ProgressName = newProgress.ProgressName;
             existingProgress.Description = newProgress.Description;
             existingProgress.IsActive = newProgress.IsActive;
-            //existingProgress.ProgressValue = newProgress.ProgressValue;
+            existingProgress.Sections = newProgress.Sections;
             existingProgress.IsAchieved = newProgress.IsAchieved;
             existingProgress.TrackedDays = newProgress.TrackedDays;
             existingProgress.TrackingProgressDay = newProgress.TrackingProgressDay;
             existingProgress.PercentageAchieved = newProgress.PercentageAchieved;
             existingProgress.Updated = newProgress.Updated;
-
-            //if (newProgress.ProgressValue == null || newProgress.ProgressValue.Count == 0)
-            //{
-            //    _logger.LogInformation("Removing associated ProgressValues as ProgressColumnHead is empty.");
-
-            //    var relatedProgressValues = await _context.ProgressValues
-            //        .Where(pv => pv.ProgressId == existingProgress.Id)
-            //        .ToListAsync();
-
-            //    _context.ProgressValues.RemoveRange(relatedProgressValues);
-            //}
 
             _context.Progresses.Update(existingProgress);
 

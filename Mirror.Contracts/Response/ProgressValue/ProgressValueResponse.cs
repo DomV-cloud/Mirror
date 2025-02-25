@@ -1,4 +1,4 @@
-﻿namespace Mirror.Contracts.Request.ProgressValue
+﻿namespace Mirror.Contracts.Response.ProgressValue
 {
     public record ProgressValueResponse(
         string? ProgressColumnValue,

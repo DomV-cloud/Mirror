@@ -1,5 +1,5 @@
 ﻿using Bogus;
-using Mirror.Contracts.Request.ProgressValue;
+using Mirror.Contracts.Response.ProgressValue;
 using Mirror.Domain.Entities;
 
 namespace Tests.MockData.Progress
