@@ -19,18 +19,10 @@ namespace Mirror.Domain.Entities
         public double TrackedDays { get; set; } = 0;
 
         /// <summary>
-        /// Day when user update progress tracking
-        /// </summary>
-        [JsonPropertyName("trackingProgressDay")]
-        public TrackingProgressDays TrackingProgressDay { get; set; } = TrackingProgressDays.Monday;
-
-        /// <summary>
         /// How many percentage user already achieved progress
         /// </summary>
         [JsonPropertyName("percentageAchieved")]
         public double PercentageAchieved { get; set; } = 0;
-
-       
 
         /// <summary>
         /// Foreign key linking to the parent Progress entity.
@@ -42,5 +34,10 @@ namespace Mirror.Domain.Entities
         /// Reference to the Progress entity.
         /// </summary>
         public Progress Progress { get; set; } = null!;
+
+        /// <summary>
+        /// Reference to the ProgressGoalMeasurement entity.
+        /// </summary>
+        public ProgressGoalMeasurement Measurement { get; set; } = null!;
     }
 }

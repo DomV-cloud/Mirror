@@ -26,41 +26,50 @@ namespace Mirror.Application.DatabaseContext
         {
             base.OnModelCreating(modelBuilder);
 
-            // Konverze enumů na stringy
-            modelBuilder.Entity<ProgressGoal>()
-                .Property(e => e.TrackingProgressDay)
-                .HasConversion(new EnumToStringConverter<TrackingProgressDays>());
+            // **Konverze enumů na string**
+            modelBuilder.Entity<ProgressGoalMeasurement>()
+                .Property(e => e.MeasurementDay)
+                .HasConversion(new EnumToStringConverter<MeasurementDay>());
 
             modelBuilder.Entity<UserMemory>()
                 .Property(e => e.Reminder)
                 .HasConversion(new EnumToStringConverter<Reminder>());
 
-            // Relationship ProgressSection → ProgressValues
+            // **Definování vztahů mezi entitami**
+
+            // ProgressSection → ProgressValues (1:N)
             modelBuilder.Entity<ProgressSection>()
                 .HasMany(s => s.ProgressValues)
                 .WithOne(r => r.ProgressSection)
                 .HasForeignKey(r => r.ProgressSectionId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Relationship Progress → ProgressSections
+            // Progress → ProgressSections (1:N)
             modelBuilder.Entity<Progress>()
                 .HasMany(p => p.Sections)
                 .WithOne(pv => pv.Progress)
                 .HasForeignKey(pv => pv.ProgressId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Relationship UserMemory → Images
+            // UserMemory → Images (1:N)
             modelBuilder.Entity<UserMemory>()
                 .HasMany(um => um.Images)
                 .WithOne(img => img.UserMemory)
                 .HasForeignKey(img => img.UserMemoryId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Relationship Progress → ProgressGoal (1:1)
+            // Progress → ProgressGoal (1:1)
             modelBuilder.Entity<Progress>()
                 .HasOne(p => p.Goal)
                 .WithOne(pg => pg.Progress)
                 .HasForeignKey<ProgressGoal>(pg => pg.ProgressId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // ProgressGoal → ProgressGoalMeasurement (1:1)
+            modelBuilder.Entity<ProgressGoal>()
+                .HasOne(pg => pg.Measurement)
+                .WithOne(pgm => pgm.ProgressGoal)
+                .HasForeignKey<ProgressGoalMeasurement>(pgm => pgm.ProgressGoalId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // **Seed data**
@@ -116,7 +125,6 @@ namespace Mirror.Application.DatabaseContext
                     ProgressId = Guid.Parse("89e39006-abb0-4d6c-a045-e36a1aa4c62e"),
                     IsAchieved = false,
                     TrackedDays = 30,
-                    TrackingProgressDay = TrackingProgressDays.Tuesday,
                     PercentageAchieved = 63,
                     SavedDate = DateTime.UtcNow
                 },
@@ -126,7 +134,6 @@ namespace Mirror.Application.DatabaseContext
                     ProgressId = Guid.Parse("42f99827-ca6e-4f5b-a31f-a99458c2e344"),
                     IsAchieved = false,
                     TrackedDays = 20,
-                    TrackingProgressDay = TrackingProgressDays.Thursday,
                     PercentageAchieved = 47,
                     SavedDate = DateTime.UtcNow
                 }
@@ -169,25 +176,25 @@ namespace Mirror.Application.DatabaseContext
                     ProgressDate_Month = 8,
                     ProgressDate_Year = 2024,
                     SavedDate = DateTime.UtcNow
-                },
-                new ProgressValue
+                }
+            );
+
+            // Seed ProgressGoalMeasurement
+            modelBuilder.Entity<ProgressGoalMeasurement>().HasData(
+                new ProgressGoalMeasurement
                 {
                     Id = Guid.NewGuid(),
-                    ProgressColumnValue = "25:17",
-                    ProgressSectionId = Guid.Parse("b9a5221f-ef31-40b4-b64e-1d7c6b80a798"),
-                    ProgressDate_Day = 6,
-                    ProgressDate_Month = 8,
-                    ProgressDate_Year = 2024,
+                    ProgressGoalId = Guid.Parse("89e39006-abb0-4d6c-a045-e36a1aa4c62e"), // odpovídající ProgressGoal ID
+                    MeasurementDay = MeasurementDay.Tuesday,
+                    NextMeasurementDate = new DateTime(2025, 3, 1),
                     SavedDate = DateTime.UtcNow
                 },
-                new ProgressValue
+                new ProgressGoalMeasurement
                 {
                     Id = Guid.NewGuid(),
-                    ProgressColumnValue = "24:19",
-                    ProgressSectionId = Guid.Parse("b9a5221f-ef31-40b4-b64e-1d7c6b80a798"),
-                    ProgressDate_Day = 6,
-                    ProgressDate_Month = 8,
-                    ProgressDate_Year = 2024,
+                    ProgressGoalId = Guid.Parse("42f99827-ca6e-4f5b-a31f-a99458c2e344"),
+                    MeasurementDay = MeasurementDay.Monday,
+                    NextMeasurementDate = new DateTime(2025, 1, 15),
                     SavedDate = DateTime.UtcNow
                 }
             );
