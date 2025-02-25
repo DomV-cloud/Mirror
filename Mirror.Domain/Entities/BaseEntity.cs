@@ -12,7 +12,16 @@ namespace Mirror.Domain.Entities
         [JsonPropertyName("id")]
         public Guid Id { get; set; }
 
+        /// <summary>
+        /// Date when was the entity is saved
+        /// </summary>
         [JsonPropertyName("saved")]
         public DateTime SavedDate { get; set; } = DateTime.UtcNow;
+
+        /// <summary>
+        /// Date when was the last time entity tracked/updated
+        /// </summary>
+        [JsonPropertyName("updated")]
+        public DateTime? UpdatedDate { get; set; }
     }
 }
