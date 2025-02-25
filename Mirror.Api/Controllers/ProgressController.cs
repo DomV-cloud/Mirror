@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Mirror.Api.Filters;
 using Mirror.Application.Services.FileService;
 using Mirror.Application.Services.Repository.Progresses;
+using Mirror.Application.Services.Repository.ProgressSection;
 using Mirror.Application.Services.Repository.ProgressValues;
 using Mirror.Contracts.Request.Progress.POST;
 using Mirror.Contracts.Request.Progress.PUT;
@@ -19,6 +20,7 @@ namespace Mirror.Api.Controllers
         private readonly ILogger<ProgressController> _logger;
         private readonly IProgressRepository _progressRepository;
         private readonly IProgressValueRepository _progressValueRepository;
+        private readonly IProgressSectionRepository _progressSectionRepository;
         private readonly IMapper _mapper;
         private readonly IFileService _fileUploadService;
 
@@ -27,13 +29,15 @@ namespace Mirror.Api.Controllers
             IProgressRepository progressRepository,
             IMapper mapper,
             IProgressValueRepository progressValueRepository,
-            IFileService fileUploadService)
+            IFileService fileUploadService,
+            IProgressSectionRepository progressSectionRepository)
         {
             _logger = logger;
             _progressRepository = progressRepository;
             _mapper = mapper;
             _progressValueRepository = progressValueRepository;
             _fileUploadService = fileUploadService;
+            _progressSectionRepository = progressSectionRepository;
         }
 
         /// <summary>
@@ -116,10 +120,10 @@ namespace Mirror.Api.Controllers
             _logger.LogInformation("Creating progress in repository.");
             var createdProgress = await _progressRepository.CreateProgressAsync(mappedProgress);
 
-            if (request.image?.Length > 0)
+            if (request.Image?.Length > 0)
             {
-                 _fileUploadService.SaveFileToBlob(request.image);
-                _logger.LogInformation("File {FileName} uploaded successfully.", request.image.Name);
+                 _fileUploadService.SaveFileToBlob(request.Image);
+                _logger.LogInformation("File {FileName} uploaded successfully.", request.Image.Name);
             }
 
             var response = _mapper.Map<ProgressResponse>(createdProgress);
@@ -136,7 +140,7 @@ namespace Mirror.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> PutProgress([FromRoute] Guid progressId, [FromBody] UpdateProgressRequest request)
+        public async Task<IActionResult> UpdateProgressById([FromRoute] Guid progressId, [FromBody] UpdateProgressRequest request)
         {
             if (progressId == Guid.Empty)
             {
@@ -160,11 +164,29 @@ namespace Mirror.Api.Controllers
                 return NotFound($"Progress with ID {progressId} not found.");
             }
 
+            if (request.NewSections != null && request.NewSections.Count != 0)
+            {
+                foreach (var newSection in request.NewSections)
+                {
+                    var createdSection = await _progressSectionRepository.CreateSectionAsync(newSection);
+                    if (createdSection is null)
+                    {
+                        return BadRequest("Attempt to create section failed");
+                    }
+                    existingProgress.Sections.Add(createdSection);
+                }
+            }
+
+            if (request.SectionsToDelete != null && request.SectionsToDelete.Count != 0)
+            {
+                await _progressSectionRepository.DeleteSectionsAsync(request.SectionsToDelete);
+            }
+
             _logger.LogInformation("Mapping update request to progress entity.");
             var updatedProgress = _mapper.Map<Progress>(request);
 
             _logger.LogInformation("Updating progress with ID {ProgressId}.", progressId);
-            var isProgressUpdated = await _progressRepository.UpdateProgress(existingProgress, updatedProgress);
+            var isProgressUpdated = await _progressRepository.UpdateProgressAsync(existingProgress, updatedProgress);
 
             if (!isProgressUpdated)
             {

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
-using Mirror.Contracts.Request.Images.GET;
 using Mirror.Contracts.Request.Memory.POST;
+using Mirror.Contracts.Response.Image;
 using Mirror.Contracts.Response.Memory;
 using Mirror.Domain.Entities;
 

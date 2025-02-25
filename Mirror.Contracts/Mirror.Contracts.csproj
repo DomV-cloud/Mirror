@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Request\Images\PUT\**" />
+    <EmbeddedResource Remove="Request\Images\PUT\**" />
+    <None Remove="Request\Images\PUT\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.2" />
@@ -22,10 +28,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Mirror.Domain\Mirror.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Request\Images\PUT\" />
   </ItemGroup>
 
 </Project>

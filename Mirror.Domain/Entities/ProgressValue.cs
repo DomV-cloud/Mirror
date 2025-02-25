@@ -10,11 +10,15 @@ namespace Mirror.Domain.Entities
     public class ProgressValue : BaseEntity
     {
         /// <summary>
-        /// Column name or identifier for the type of value recorded (e.g., "Weight").
+        /// Foreign key linking to the associated section.
         /// </summary>
-        [Required]
-        [JsonPropertyName("progressColumnHead")]
-        public string ProgressColumnHead { get; set; } = null!;
+        [ForeignKey(nameof(Progress))]
+        public Guid ProgressSectionId { get; set; }
+
+        /// <summary>
+        /// Reference to the user ProgressSection.
+        /// </summary>
+        public ProgressSection ProgressSection { get; set; } = null!;
 
         /// <summary>
         /// Actual recorded value for the metric (e.g., 70 kg).
@@ -22,16 +26,16 @@ namespace Mirror.Domain.Entities
         [JsonPropertyName("column-value")]
         public string? ProgressColumnValue { get; set; }
 
-        /// <summary>
-        /// Foreign key linking to the parent Progress entity.
-        /// </summary>
-        [ForeignKey("Progress")]
-        public Guid ProgressId { get; set; }
+        ///// <summary>
+        ///// Foreign key linking to the parent Progress entity.
+        ///// </summary>
+        //[ForeignKey("Progress")]
+        //public Guid ProgressId { get; set; }
 
-        /// <summary>
-        /// Reference to the Progress entity this value belongs to.
-        /// </summary>
-        public Progress Progress { get; set; } = null!;
+        ///// <summary>
+        ///// Reference to the Progress entity this value belongs to.
+        ///// </summary>
+        //public Progress Progress { get; set; } = null!;
 
         /// <summary>
         /// Day part of the date for this progress entry.

@@ -1,12 +1,12 @@
 ﻿using Bogus;
 using Microsoft.AspNetCore.Http;
-using Mirror.Contracts.Request.Images.GET;
+using Mirror.Contracts.Response.Image;
 
 namespace Tests.MockData.Image
 {
     public static class FakeImage
     {
-        public static IFormFileCollection GenerateMockImages(int count)
+        public static List<IFormFile> GenerateMockImages(int count)
         {
             var images = new List<IFormFile>();
 
@@ -27,13 +27,7 @@ namespace Tests.MockData.Image
                 images.Add(file);
             }
 
-            var formFileCollection = new FormFileCollection();
-            foreach (var image in images)
-            {
-                formFileCollection.Add(image);
-            }
-
-            return formFileCollection;
+            return images;
         }
 
         public static Faker<Mirror.Domain.Entities.Image> CreateMockImage(

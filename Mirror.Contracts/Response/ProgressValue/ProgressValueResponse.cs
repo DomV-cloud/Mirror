@@ -1,7 +1,6 @@
-﻿namespace Mirror.Contracts.Request.ProgressValue
+﻿namespace Mirror.Contracts.Response.ProgressValue
 {
-    public record ProgressValueDTO(
-        string? ProgressColumnHead,
+    public record ProgressValueResponse(
         string? ProgressColumnValue,
         int ProgressDate_Day,
         int ProgressDate_Month,

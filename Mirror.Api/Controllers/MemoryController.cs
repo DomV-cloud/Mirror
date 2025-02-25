@@ -145,7 +145,7 @@ namespace Mirror.Api.Controllers
                 return NotFound($"Memory with ID {memoryId} not found.");
             }
 
-            if (request.NewImages.Count != 0)
+            if (request.NewImages != null && request.NewImages.Count != 0)
             {
                 foreach (var newImage in request.NewImages)
                 {

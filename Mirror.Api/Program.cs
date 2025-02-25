@@ -1,4 +1,3 @@
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -8,9 +7,11 @@ using Mirror.Api.Middleware;
 using Mirror.Application.DatabaseContext;
 using Mirror.Application.DependencyInjection;
 using Mirror.Infrastructure.DependencyInjection;
+using Mirror.Infrastructure.Mapper.Common;
 using Mirror.Infrastructure.Mapper.Image;
 using Mirror.Infrastructure.Mapper.Memory;
 using Mirror.Infrastructure.Mapper.Progress;
+using Mirror.Infrastructure.Mapper.Section;
 using Newtonsoft.Json;
 using System.Text;
 
@@ -27,8 +28,11 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddSwaggerGen();
     builder.Services
         .AddAutoMapper(typeof(ProgressMapperProfile))
+        .AddAutoMapper(typeof(ProgressSectionMapperProfile))
         .AddAutoMapper(typeof(ImageMapperProfile))
-        .AddAutoMapper(typeof(UserMemoryMapperProfile));
+        .AddAutoMapper(typeof(UserMemoryMapperProfile))
+        .AddAutoMapper(typeof(CommonMapperProfile))
+        ;
 
     builder.Services
         .AddApplication()

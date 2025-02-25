@@ -11,7 +11,7 @@ namespace Mirror.Application.DependencyInjection
         {
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IFileService, FileService>();
-            services.AddScoped<IFilePathGenerator, FilePathGenerator>();
+            services.AddTransient<IFilePathGenerator, FilePathGenerator>();
 
             return services;
         }

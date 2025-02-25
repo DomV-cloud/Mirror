@@ -59,7 +59,7 @@ namespace Mirror.Infrastructure.Persistance.Repository.Image
                 if (imageId != Guid.Empty)
                 {
                     var imageToDelete = await _context.Images.FirstOrDefaultAsync(i => i.Id == imageId);
-                    if (imageToDelete is null)
+                    if (imageToDelete == null)
                     {
                         return;
                     }
