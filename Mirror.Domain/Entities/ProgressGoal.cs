@@ -30,11 +30,7 @@ namespace Mirror.Domain.Entities
         [JsonPropertyName("percentageAchieved")]
         public double PercentageAchieved { get; set; } = 0;
 
-        /// <summary>
-        /// Set whenever is progress active or not
-        /// </summary>
-        [JsonPropertyName("isActive")]
-        public bool IsActive { get; set; } = false;
+       
 
         /// <summary>
         /// Foreign key linking to the parent Progress entity.

@@ -40,6 +40,12 @@ namespace Mirror.Domain.Entities
         public List<ProgressSection> Sections { get; set; } = [];
 
         /// <summary>
+        /// Set whenever is progress active or not
+        /// </summary>
+        [JsonPropertyName("isActive")]
+        public bool IsActive { get; set; } = false;
+
+        /// <summary>
         /// Represents goal for each progress tracking
         /// </summary>
         [JsonPropertyName("goal")]

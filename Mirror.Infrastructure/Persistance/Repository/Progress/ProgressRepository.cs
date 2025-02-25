@@ -95,11 +95,6 @@ namespace Mirror.Infrastructure.Services.Repository.Progress
             existingProgress.Description = newProgress.Description;
             existingProgress.IsActive = newProgress.IsActive;
             existingProgress.Sections = newProgress.Sections;
-            existingProgress.IsAchieved = newProgress.IsAchieved;
-            existingProgress.TrackedDays = newProgress.TrackedDays;
-            existingProgress.TrackingProgressDay = newProgress.TrackingProgressDay;
-            existingProgress.PercentageAchieved = newProgress.PercentageAchieved;
-            existingProgress.Updated = newProgress.Updated;
 
             _context.Progresses.Update(existingProgress);
 
