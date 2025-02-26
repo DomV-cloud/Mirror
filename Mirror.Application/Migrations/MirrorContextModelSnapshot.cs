@@ -119,7 +119,7 @@ namespace Mirror.Application.Migrations
                             Description = "Cutting body fat",
                             IsActive = true,
                             ProgressName = "Weight",
-                            SavedDate = new DateTime(2025, 2, 25, 9, 31, 15, 359, DateTimeKind.Utc).AddTicks(8417),
+                            SavedDate = new DateTime(2025, 2, 26, 9, 7, 40, 36, DateTimeKind.Utc).AddTicks(7028),
                             UserId = new Guid("36165a94-1a9c-43dd-bf13-97a4e61e8b89")
                         },
                         new
@@ -128,7 +128,7 @@ namespace Mirror.Application.Migrations
                             Description = "Training to Marathon",
                             IsActive = false,
                             ProgressName = "Time",
-                            SavedDate = new DateTime(2025, 2, 25, 9, 31, 15, 359, DateTimeKind.Utc).AddTicks(8424),
+                            SavedDate = new DateTime(2025, 2, 26, 9, 7, 40, 36, DateTimeKind.Utc).AddTicks(7032),
                             UserId = new Guid("6d3080d4-5dbf-4549-8ac1-77713785de2a")
                         });
                 });
@@ -159,11 +159,6 @@ namespace Mirror.Application.Migrations
                         .HasColumnType("float")
                         .HasAnnotation("Relational:JsonPropertyName", "trackedDays");
 
-                    b.Property<string>("TrackingProgressDay")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "trackingProgressDay");
-
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2")
                         .HasAnnotation("Relational:JsonPropertyName", "updated");
@@ -180,23 +175,74 @@ namespace Mirror.Application.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("52c79d9b-7078-4936-a4db-5bada7b58ba9"),
+                            Id = new Guid("66e37671-8ca7-4641-b68a-5077de60c800"),
                             IsAchieved = false,
                             PercentageAchieved = 63.0,
                             ProgressId = new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e"),
-                            SavedDate = new DateTime(2025, 2, 25, 9, 31, 15, 359, DateTimeKind.Utc).AddTicks(8505),
-                            TrackedDays = 30.0,
-                            TrackingProgressDay = "Tuesday"
+                            SavedDate = new DateTime(2025, 2, 26, 9, 7, 40, 36, DateTimeKind.Utc).AddTicks(7058),
+                            TrackedDays = 30.0
                         },
                         new
                         {
-                            Id = new Guid("b1318182-6d0f-43ac-8851-452b7520b463"),
+                            Id = new Guid("514c4dc6-eddf-49c8-93d8-0c7f8f12cb45"),
                             IsAchieved = false,
                             PercentageAchieved = 47.0,
                             ProgressId = new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"),
-                            SavedDate = new DateTime(2025, 2, 25, 9, 31, 15, 359, DateTimeKind.Utc).AddTicks(8512),
-                            TrackedDays = 20.0,
-                            TrackingProgressDay = "Thursday"
+                            SavedDate = new DateTime(2025, 2, 26, 9, 7, 40, 36, DateTimeKind.Utc).AddTicks(7062),
+                            TrackedDays = 20.0
+                        });
+                });
+
+            modelBuilder.Entity("Mirror.Domain.Entities.ProgressGoalMeasurement", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("Relational:JsonPropertyName", "id");
+
+                    b.Property<string>("MeasurementDay")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasAnnotation("Relational:JsonPropertyName", "measurementDay");
+
+                    b.Property<DateTime>("NextMeasurementDate")
+                        .HasColumnType("datetime2")
+                        .HasAnnotation("Relational:JsonPropertyName", "nextMeasurementDate");
+
+                    b.Property<Guid>("ProgressGoalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("SavedDate")
+                        .HasColumnType("datetime2")
+                        .HasAnnotation("Relational:JsonPropertyName", "saved");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2")
+                        .HasAnnotation("Relational:JsonPropertyName", "updated");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProgressGoalId")
+                        .IsUnique();
+
+                    b.ToTable("ProgressGoalMeasurements");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("5516bdd9-090e-4446-a10a-1d30337623fa"),
+                            MeasurementDay = "Tuesday",
+                            NextMeasurementDate = new DateTime(2025, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ProgressGoalId = new Guid("66e37671-8ca7-4641-b68a-5077de60c800"),
+                            SavedDate = new DateTime(2025, 2, 26, 9, 7, 40, 36, DateTimeKind.Utc).AddTicks(7173)
+                        },
+                        new
+                        {
+                            Id = new Guid("e70aee1b-c8f3-42d3-957f-c98366ba2f4f"),
+                            MeasurementDay = "Monday",
+                            NextMeasurementDate = new DateTime(2025, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ProgressGoalId = new Guid("514c4dc6-eddf-49c8-93d8-0c7f8f12cb45"),
+                            SavedDate = new DateTime(2025, 2, 26, 9, 7, 40, 36, DateTimeKind.Utc).AddTicks(7176)
                         });
                 });
 
@@ -236,14 +282,14 @@ namespace Mirror.Application.Migrations
                         {
                             Id = new Guid("1f17c260-9106-43cf-8d9b-bde8f040e4bb"),
                             ProgressId = new Guid("89e39006-abb0-4d6c-a045-e36a1aa4c62e"),
-                            SavedDate = new DateTime(2025, 2, 25, 9, 31, 15, 359, DateTimeKind.Utc).AddTicks(8535),
+                            SavedDate = new DateTime(2025, 2, 26, 9, 7, 40, 36, DateTimeKind.Utc).AddTicks(7082),
                             SectionName = "Body Weight Measurements"
                         },
                         new
                         {
                             Id = new Guid("b9a5221f-ef31-40b4-b64e-1d7c6b80a798"),
                             ProgressId = new Guid("42f99827-ca6e-4f5b-a31f-a99458c2e344"),
-                            SavedDate = new DateTime(2025, 2, 25, 9, 31, 15, 359, DateTimeKind.Utc).AddTicks(8541),
+                            SavedDate = new DateTime(2025, 2, 26, 9, 7, 40, 36, DateTimeKind.Utc).AddTicks(7087),
                             SectionName = "Run Time Measurements"
                         });
                 });
@@ -293,43 +339,23 @@ namespace Mirror.Application.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("097003fa-a0e7-4f2b-b924-267d88c60600"),
+                            Id = new Guid("6819a558-9385-451a-affe-a953c6ab3477"),
                             ProgressColumnValue = "71",
                             ProgressDate_Day = 6,
                             ProgressDate_Month = 8,
                             ProgressDate_Year = 2024,
                             ProgressSectionId = new Guid("1f17c260-9106-43cf-8d9b-bde8f040e4bb"),
-                            SavedDate = new DateTime(2025, 2, 25, 9, 31, 15, 359, DateTimeKind.Utc).AddTicks(8577)
+                            SavedDate = new DateTime(2025, 2, 26, 9, 7, 40, 36, DateTimeKind.Utc).AddTicks(7145)
                         },
                         new
                         {
-                            Id = new Guid("e78cfb2f-6cad-445b-9902-29000f30b554"),
+                            Id = new Guid("cb71483f-7e2f-4a18-a2f3-41dacca6506a"),
                             ProgressColumnValue = "72",
                             ProgressDate_Day = 10,
                             ProgressDate_Month = 8,
                             ProgressDate_Year = 2024,
                             ProgressSectionId = new Guid("b9a5221f-ef31-40b4-b64e-1d7c6b80a798"),
-                            SavedDate = new DateTime(2025, 2, 25, 9, 31, 15, 359, DateTimeKind.Utc).AddTicks(8583)
-                        },
-                        new
-                        {
-                            Id = new Guid("3b53bcd6-284d-43ef-962f-40b9c256f4b1"),
-                            ProgressColumnValue = "25:17",
-                            ProgressDate_Day = 6,
-                            ProgressDate_Month = 8,
-                            ProgressDate_Year = 2024,
-                            ProgressSectionId = new Guid("b9a5221f-ef31-40b4-b64e-1d7c6b80a798"),
-                            SavedDate = new DateTime(2025, 2, 25, 9, 31, 15, 359, DateTimeKind.Utc).AddTicks(8588)
-                        },
-                        new
-                        {
-                            Id = new Guid("845389aa-1640-4d45-a9df-5292f405b491"),
-                            ProgressColumnValue = "24:19",
-                            ProgressDate_Day = 6,
-                            ProgressDate_Month = 8,
-                            ProgressDate_Year = 2024,
-                            ProgressSectionId = new Guid("b9a5221f-ef31-40b4-b64e-1d7c6b80a798"),
-                            SavedDate = new DateTime(2025, 2, 25, 9, 31, 15, 359, DateTimeKind.Utc).AddTicks(8593)
+                            SavedDate = new DateTime(2025, 2, 26, 9, 7, 40, 36, DateTimeKind.Utc).AddTicks(7149)
                         });
                 });
 
@@ -380,7 +406,7 @@ namespace Mirror.Application.Migrations
                             FirstName = "John",
                             LastName = "Doe",
                             Password = "hashedpassword123",
-                            SavedDate = new DateTime(2025, 2, 25, 9, 31, 15, 359, DateTimeKind.Utc).AddTicks(8237)
+                            SavedDate = new DateTime(2025, 2, 26, 9, 7, 40, 36, DateTimeKind.Utc).AddTicks(6853)
                         },
                         new
                         {
@@ -389,7 +415,7 @@ namespace Mirror.Application.Migrations
                             FirstName = "Jane",
                             LastName = "Smith",
                             Password = "hashedpassword456",
-                            SavedDate = new DateTime(2025, 2, 25, 9, 31, 15, 359, DateTimeKind.Utc).AddTicks(8243)
+                            SavedDate = new DateTime(2025, 2, 26, 9, 7, 40, 36, DateTimeKind.Utc).AddTicks(6857)
                         });
                 });
 
@@ -465,6 +491,17 @@ namespace Mirror.Application.Migrations
                     b.Navigation("Progress");
                 });
 
+            modelBuilder.Entity("Mirror.Domain.Entities.ProgressGoalMeasurement", b =>
+                {
+                    b.HasOne("Mirror.Domain.Entities.ProgressGoal", "ProgressGoal")
+                        .WithOne("Measurement")
+                        .HasForeignKey("Mirror.Domain.Entities.ProgressGoalMeasurement", "ProgressGoalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProgressGoal");
+                });
+
             modelBuilder.Entity("Mirror.Domain.Entities.ProgressSection", b =>
                 {
                     b.HasOne("Mirror.Domain.Entities.Progress", "Progress")
@@ -504,6 +541,12 @@ namespace Mirror.Application.Migrations
                         .IsRequired();
 
                     b.Navigation("Sections");
+                });
+
+            modelBuilder.Entity("Mirror.Domain.Entities.ProgressGoal", b =>
+                {
+                    b.Navigation("Measurement")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Mirror.Domain.Entities.ProgressSection", b =>

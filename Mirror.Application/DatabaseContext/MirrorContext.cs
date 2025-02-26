@@ -21,6 +21,7 @@ namespace Mirror.Application.DatabaseContext
         public DbSet<UserMemory> Memories => Set<UserMemory>();
         public DbSet<ProgressSection> ProgressSections => Set<ProgressSection>();
         public DbSet<ProgressGoal> ProgressGoals => Set<ProgressGoal>();
+        public DbSet<ProgressGoalMeasurement> ProgressGoalMeasurements => Set<ProgressGoalMeasurement>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -68,8 +69,8 @@ namespace Mirror.Application.DatabaseContext
             // ProgressGoal → ProgressGoalMeasurement (1:1)
             modelBuilder.Entity<ProgressGoal>()
                 .HasOne(pg => pg.Measurement)
-                .WithOne(pgm => pgm.ProgressGoal)
-                .HasForeignKey<ProgressGoalMeasurement>(pgm => pgm.ProgressGoalId)
+                .WithOne(m => m.ProgressGoal)
+                .HasForeignKey<ProgressGoalMeasurement>(m => m.ProgressGoalId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // **Seed data**
@@ -121,16 +122,16 @@ namespace Mirror.Application.DatabaseContext
             modelBuilder.Entity<ProgressGoal>().HasData(
                 new ProgressGoal
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("66e37671-8ca7-4641-b68a-5077de60c800"),
                     ProgressId = Guid.Parse("89e39006-abb0-4d6c-a045-e36a1aa4c62e"),
                     IsAchieved = false,
                     TrackedDays = 30,
                     PercentageAchieved = 63,
-                    SavedDate = DateTime.UtcNow
+                    SavedDate = DateTime.UtcNow,
                 },
                 new ProgressGoal
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("514c4dc6-eddf-49c8-93d8-0c7f8f12cb45"),
                     ProgressId = Guid.Parse("42f99827-ca6e-4f5b-a31f-a99458c2e344"),
                     IsAchieved = false,
                     TrackedDays = 20,
@@ -184,7 +185,7 @@ namespace Mirror.Application.DatabaseContext
                 new ProgressGoalMeasurement
                 {
                     Id = Guid.NewGuid(),
-                    ProgressGoalId = Guid.Parse("89e39006-abb0-4d6c-a045-e36a1aa4c62e"), // odpovídající ProgressGoal ID
+                    ProgressGoalId = Guid.Parse("66e37671-8ca7-4641-b68a-5077de60c800"), 
                     MeasurementDay = MeasurementDay.Tuesday,
                     NextMeasurementDate = new DateTime(2025, 3, 1),
                     SavedDate = DateTime.UtcNow
@@ -192,7 +193,7 @@ namespace Mirror.Application.DatabaseContext
                 new ProgressGoalMeasurement
                 {
                     Id = Guid.NewGuid(),
-                    ProgressGoalId = Guid.Parse("42f99827-ca6e-4f5b-a31f-a99458c2e344"),
+                    ProgressGoalId = Guid.Parse("514c4dc6-eddf-49c8-93d8-0c7f8f12cb45"),
                     MeasurementDay = MeasurementDay.Monday,
                     NextMeasurementDate = new DateTime(2025, 1, 15),
                     SavedDate = DateTime.UtcNow
