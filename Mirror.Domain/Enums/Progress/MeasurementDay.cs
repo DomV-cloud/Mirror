@@ -2,7 +2,7 @@
 
 namespace Mirror.Domain.Enums.Progress
 {
-    public enum TrackingProgressDays
+    public enum MeasurementDay
     {
         [Display(Name = "Monday")]
         Monday,
