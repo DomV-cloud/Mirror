@@ -27,7 +27,9 @@ namespace Mirror.Infrastructure.Services.Repository.Progress
                 .AsSplitQuery() //.AsSplitQuery() I would considering, if in this case is good to use. 
                 .Where(p => p.UserId == userId)
                 .Include(p => p.Sections)
-                .ThenInclude(p => p.ProgressValues)
+                    .ThenInclude(ps => ps.ProgressValues)
+                .Include(p => p.Goal)
+                    .ThenInclude(pg => pg.Measurement)
                 .FirstOrDefaultAsync(p => p.IsActive);
 
             if (activeProgress == null)

@@ -33,6 +33,6 @@ namespace Mirror.Domain.Entities
         /// Number of days remaining until the next measurement.
         /// </summary>
         [JsonPropertyName("daysRemaining")]
-        public int DaysRemaining => (NextMeasurementDate - DateTime.UtcNow).Days;
+        public int DaysRemaining => (NextMeasurementDate - DateTime.UtcNow).Days; // Do I need it here? 
     }
 }

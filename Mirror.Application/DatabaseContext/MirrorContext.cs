@@ -106,7 +106,6 @@ namespace Mirror.Application.DatabaseContext
                     Description = "Cutting body fat",
                     UserId = Guid.Parse("36165a94-1a9c-43dd-bf13-97a4e61e8b89"),
                     SavedDate = DateTime.UtcNow,
-                    IsActive = true
                 },
                 new Progress
                 {
@@ -114,7 +113,8 @@ namespace Mirror.Application.DatabaseContext
                     ProgressName = "Time",
                     Description = "Training to Marathon",
                     UserId = Guid.Parse("6d3080d4-5dbf-4549-8ac1-77713785de2a"),
-                    SavedDate = DateTime.UtcNow
+                    SavedDate = DateTime.UtcNow,
+                    IsActive = true
                 }
             );
 

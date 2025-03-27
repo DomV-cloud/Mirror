@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Mirror.Contracts.Request.ProgressGoal;
+using Mirror.Contracts.Request.ProgressMeasurement;
 using Mirror.Contracts.Request.ProgressSection.POST;
 using Mirror.Contracts.Request.ProgressValue.POST;
 using Mirror.Contracts.Response.ProgressValue;
@@ -18,6 +20,10 @@ namespace Mirror.Infrastructure.Mapper.Common
             CreateMap<CreateProgressSectionRequest, ProgressSection>();
 
             CreateMap<ProgressSectionResponse, ProgressSection>();
+
+            CreateMap<ProgressGoal, ProgressGoalResponse>();
+
+            CreateMap<ProgressGoalMeasurement, ProgressGoalMeasurementResponse>();
         }
     }
 }

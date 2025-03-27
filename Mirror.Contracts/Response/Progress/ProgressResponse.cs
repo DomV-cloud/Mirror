@@ -1,4 +1,6 @@
-﻿using Mirror.Contracts.Response.Section;
+﻿using Mirror.Contracts.Request.ProgressGoal;
+using Mirror.Contracts.Request.ProgressMeasurement;
+using Mirror.Contracts.Response.Section;
 using Mirror.Domain.Entities;
 
 namespace Mirror.Contracts.Response.Progress
@@ -43,35 +45,6 @@ namespace Mirror.Contracts.Response.Progress
         /// <example>A personal progress journey for improving fitness over the course of a year.</example>
         public string? Description { get; set; }
 
-        /// <summary>
-        /// Gets or sets the string that tracks the days of progress.
-        /// </summary>
-        /// <remarks>
-        /// This field is optional and can be used to track days associated with progress.
-        /// </remarks>
-        /// <example>"Day 10 of 30"</example>
-        public string? TrackingProgressDays { get; set; }
-
-        /// <summary>
-        /// Gets or sets the percentage of progress achieved.
-        /// </summary>
-        /// <example>75.5</example>
-        public double PercentageAchieved { get; set; }
-
-        /// <summary>
-        /// Gets or sets whether the progress has been achieved.
-        /// </summary>
-        /// <remarks>
-        /// This field is optional and indicates if the progress goal has been met.
-        /// </remarks>
-        public bool? IsAchieved { get; set; }
-
-        /// <summary>
-        /// Gets or sets whether the progress is active.
-        /// </summary>
-        /// <remarks>
-        /// This field is optional and indicates whether the progress is still ongoing or completed.
-        /// </remarks>
-        public bool? IsActive { get; set; }
+        public ProgressGoalResponse Goal { get; set; } = null!;
     }
 }

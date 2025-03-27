@@ -15,7 +15,7 @@ namespace Mirror.Domain.Entities
         /// How many days is progress tracked
         /// </summary>
         [JsonPropertyName("trackedDays")]
-        public double TrackedDays { get; set; } = 0;
+        public int TrackedDays { get; set; } = 0;
 
         /// <summary>
         /// How many percentage user already achieved progress
